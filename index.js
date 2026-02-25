@@ -1,11 +1,21 @@
+/* ------------------------------------------------- */
+/*                   CONFIG OPTIONS                  */
+/* ------------------------------------------------- */
 const SHOW_PLACE_VALUES = true;
 const TWENTY_FOUR_HOURS = true;
-const HOURS_MAX = TWENTY_FOUR_HOURS ? 24 : 12;
-const MINUTES_SECONDS_MAX = 60;
+const HIDE_UNUSED_PIPS = true;
+
+/* ------------------------------------------------- */
+
+const MAXIMUM_PIPS = /**  @type {const} */ ({
+  hours: TWENTY_FOUR_HOURS ? 24 : 12,
+  minutes: 60,
+  seconds: 60,
+});
+
+const UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
 
 const clock = document.getElementById("clock");
-
-const units = ["hours", "minutes", "seconds"];
 
 /**
  * Converts a given decimal number to its binary representation.
@@ -17,6 +27,10 @@ function toBinary(decimal) {
   return (decimal >>> 0).toString(2).padStart(8, "0");
 }
 
+/**
+ * Updates the clock by setting the active class on the pips.
+ * This function is called once every second.
+ */
 function updateClock() {
   const date = new Date();
   const binary = {
@@ -25,7 +39,7 @@ function updateClock() {
     seconds: toBinary(date.getSeconds()),
   };
 
-  units.forEach((unit) => {
+  UNITS.forEach((unit) => {
     const binaryValue = Array.from(binary[unit]).map((value) => Number.parseInt(value, 2));
     const pips = Array.from(clock[unit]);
 
@@ -41,16 +55,22 @@ function updateClock() {
  * This function is called once at the beginning of the program.
  */
 function prepareClock() {
-  units.forEach((unit) => {
+  UNITS.forEach((unit) => {
     const unitPips = clock.querySelectorAll(`clock-${unit} pip`);
     // Set properties on clock.
     clock[unit] = unitPips;
 
-    // Set binary place value for each pip
     Array.from(unitPips)
       .reverse()
       .forEach((pip, index) => {
         const val = 2 ** index;
+
+        // Hide unused pips
+        if (HIDE_UNUSED_PIPS && val > MAXIMUM_PIPS[unit]) {
+          pip.classList.add("hidden");
+        }
+
+        // Set attribute and text content.
         pip.setAttribute("data-binary-place-value", val);
         pip.textContent = SHOW_PLACE_VALUES ? val : "";
       });
@@ -60,5 +80,4 @@ function prepareClock() {
 }
 
 prepareClock();
-
 setInterval(updateClock, 1000);

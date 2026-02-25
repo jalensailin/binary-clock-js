@@ -46,13 +46,17 @@ binary-clock {
       width: 50px;
       height: 50px;
 
-      background-color: rgb(100, 100, 100);
+      background-color: rgb(100, 79, 79);
 
       border: black 1px solid;
       border-radius: 100vw;
 
       &.active {
         background-color: rgb(177, 93, 93);
+      }
+
+      &.hidden {
+        visibility: hidden;
       }
     }
   }
