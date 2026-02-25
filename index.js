@@ -27,6 +27,14 @@ function toBinary(decimal) {
   return (decimal >>> 0).toString(2).padStart(8, "0");
 }
 
+/**
+ * Returns the time in the given date object.
+ * If the binary option is set to true, the time is returned in binary format.
+ * @param {Date} date The date object from which to get the time.
+ * @param {Object} [options] Optional options object.
+ * @param {boolean} [options.binary=false] If set to true, return the time in binary format.
+ * @returns {Object} Object containing the time in hours, minutes, and seconds.
+ */
 function getTime(date, { binary = false } = {}) {
   const time = {
     hours: date.getHours(),
@@ -44,6 +52,11 @@ function getTime(date, { binary = false } = {}) {
   return time;
 }
 
+/**
+ * Sets the active class on the pips based on the binary
+ * representation of the current time.
+ * @param {Date} date The current date and time.
+ */
 function updateBinaryTime(date) {
   const binaryTime = getTime(date, { binary: true });
 
@@ -58,6 +71,10 @@ function updateBinaryTime(date) {
   });
 }
 
+/**
+ * Sets the decimal time on the clock.
+ * @param {Date} date The current date and time.
+ */
 function updateDecimalTime(date) {
   const decimalTime = getTime(date);
   UNITS.forEach((unit) => {
