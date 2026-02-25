@@ -2,7 +2,7 @@
 /*                   CONFIG OPTIONS                  */
 /* ------------------------------------------------- */
 const SHOW_PLACE_VALUES = true;
-const TWELVE_HOUR_TIME = true;
+const TWELVE_HOUR_TIME = false;
 const HIDE_UNUSED_PIPS = true;
 
 /* ------------------------------------------------- */
