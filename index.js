@@ -2,13 +2,13 @@
 /*                   CONFIG OPTIONS                  */
 /* ------------------------------------------------- */
 const SHOW_PLACE_VALUES = true;
-const TWENTY_FOUR_HOURS = true;
+const TWELVE_HOUR_TIME = true;
 const HIDE_UNUSED_PIPS = true;
 
 /* ------------------------------------------------- */
 
 const MAXIMUM_PIPS = /**  @type {const} */ ({
-  hours: TWENTY_FOUR_HOURS ? 24 : 12,
+  hours: TWELVE_HOUR_TIME ? 12 : 24,
   minutes: 60,
   seconds: 60,
 });
@@ -36,8 +36,9 @@ function toBinary(decimal) {
  * @returns {Object} Object containing the time in hours, minutes, and seconds.
  */
 function getTime(date, { binary = false } = {}) {
+  const hours = date.getHours();
   const time = {
-    hours: date.getHours(),
+    hours: TWELVE_HOUR_TIME ? hours % 12 : hours,
     minutes: date.getMinutes(),
     seconds: date.getSeconds(),
   };
@@ -50,6 +51,15 @@ function getTime(date, { binary = false } = {}) {
     });
 
   return time;
+}
+
+function removeUnusedHoursColumn() {
+  const hoursPips = clock.querySelectorAll("clock-hours pip");
+  hoursPips.forEach((pip, index) => {
+    if (index < 4) {
+      pip.remove();
+    }
+  });
 }
 
 /**
@@ -79,7 +89,8 @@ function updateDecimalTime(date) {
   const decimalTime = getTime(date);
   UNITS.forEach((unit) => {
     const pip = clock.querySelector(`clock-${unit} time.decimal-time`);
-    pip.textContent = decimalTime[unit];
+    const timeValue = decimalTime[unit];
+    pip.textContent = TWELVE_HOUR_TIME && timeValue === 0 ? 12 : timeValue;
   });
 }
 
@@ -119,6 +130,8 @@ async function prepareClock() {
         pip.textContent = SHOW_PLACE_VALUES ? val : "";
       });
   });
+
+  if (TWELVE_HOUR_TIME) removeUnusedHoursColumn();
 
   // Update the clock once to set the initial time.
   updateClock();
