@@ -27,20 +27,28 @@ function toBinary(decimal) {
   return (decimal >>> 0).toString(2).padStart(8, "0");
 }
 
-/**
- * Updates the clock by setting the active class on the pips.
- * This function is called once every second.
- */
-function updateClock() {
-  const date = new Date();
-  const binary = {
-    hours: toBinary(date.getHours()),
-    minutes: toBinary(date.getMinutes()),
-    seconds: toBinary(date.getSeconds()),
+function getTime(date, { binary = false } = {}) {
+  const time = {
+    hours: date.getHours(),
+    minutes: date.getMinutes(),
+    seconds: date.getSeconds(),
   };
 
+  if (binary)
+    Object.assign(time, {
+      hours: toBinary(time.hours),
+      minutes: toBinary(time.minutes),
+      seconds: toBinary(time.seconds),
+    });
+
+  return time;
+}
+
+function updateBinaryTime(date) {
+  const binaryTime = getTime(date, { binary: true });
+
   UNITS.forEach((unit) => {
-    const binaryValue = Array.from(binary[unit]).map((value) => Number.parseInt(value, 2));
+    const binaryValue = Array.from(binaryTime[unit]).map((value) => Number.parseInt(value, 2));
     const pips = Array.from(clock[unit]);
 
     binaryValue.forEach((value, index) => {
@@ -48,6 +56,25 @@ function updateClock() {
       value ? pip.classList.add("active") : pip.classList.remove("active");
     });
   });
+}
+
+function updateDecimalTime(date) {
+  const decimalTime = getTime(date);
+  UNITS.forEach((unit) => {
+    const pip = clock.querySelector(`clock-${unit} time.decimal-time`);
+    pip.textContent = decimalTime[unit];
+  });
+}
+
+/**
+ * Updates the clock by setting the active class on the pips.
+ * This function is called once every second.
+ */
+function updateClock() {
+  const date = new Date();
+
+  updateBinaryTime(date);
+  updateDecimalTime(date);
 }
 
 /**

@@ -18,44 +18,55 @@ binary-clock {
   align-items: center;
   gap: 40px;
 
-  /* background-color: rgb(53, 36, 102); */
   border-radius: 24px;
 
   box-shadow: 0px 0px 100px rgba(255, 255, 255, 0.5);
 
   padding: 20px;
 
-  time.binary-time {
-    display: grid;
-    gap: 10px;
+  time {
+    &.binary-time {
+      display: grid;
+      gap: 10px;
 
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    grid-auto-flow: column;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      grid-auto-flow: column;
 
-    justify-content: center;
-    align-items: center;
+      justify-content: center;
+      align-items: center;
 
-    pip {
+      pip {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: 50px;
+        height: 50px;
+
+        background-color: rgb(100, 79, 79);
+
+        border: black 1px solid;
+        border-radius: 100vw;
+
+        &.active {
+          background-color: rgb(177, 93, 93);
+        }
+
+        &.hidden {
+          visibility: hidden;
+        }
+      }
+    }
+
+    &.decimal-time {
       display: flex;
       justify-content: center;
       align-items: center;
 
-      width: 50px;
-      height: 50px;
+      color: white;
 
-      background-color: rgb(100, 79, 79);
-
-      border: black 1px solid;
-      border-radius: 100vw;
-
-      &.active {
-        background-color: rgb(177, 93, 93);
-      }
-
-      &.hidden {
-        visibility: hidden;
-      }
+      margin-top: 20px;
     }
   }
 }
