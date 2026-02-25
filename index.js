@@ -81,7 +81,7 @@ function updateClock() {
  * Prepares the clock by setting the binary place value for each pip.
  * This function is called once at the beginning of the program.
  */
-function prepareClock() {
+async function prepareClock() {
   UNITS.forEach((unit) => {
     const unitPips = clock.querySelectorAll(`clock-${unit} pip`);
     // Set properties on clock.
@@ -103,8 +103,21 @@ function prepareClock() {
       });
   });
 
+  // Update the clock once to set the initial time.
   updateClock();
+
+  // Wait until the next whole second to start update cycle.
+  // Might not be best solution.
+  const timeNow = new Date().getTime();
+  const timeUntilNextWholeSecond = 1000 - (timeNow % 1000);
+
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      updateClock();
+      resolve();
+    }, timeUntilNextWholeSecond);
+  });
+  setInterval(updateClock, 1000);
 }
 
 prepareClock();
-setInterval(updateClock, 1000);
