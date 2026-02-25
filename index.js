@@ -53,13 +53,18 @@ function getTime(date, { binary = false } = {}) {
   return time;
 }
 
-function removeUnusedHoursColumn() {
-  const hoursPips = clock.querySelectorAll("clock-hours pip");
-  hoursPips.forEach((pip, index) => {
-    if (index < 4) {
-      pip.remove();
-    }
-  });
+/**
+ * Displays the meridiem pip with the current hour's meridiem.
+ * @param {number} hour The current hour in 12-hour format.
+ */
+function displayMeridiemPip(hour) {
+  // Hide first hour pip to make room for meridiem pip.
+  clock.querySelector("clock-hours pip").style.display = "none";
+
+  const meridiem = clock.querySelector("clock-hours pip.meridiem");
+  meridiem.style.display = "";
+  meridiem.classList.add("active");
+  meridiem.textContent = hour >= 12 ? "PM" : "AM";
 }
 
 /**
@@ -103,6 +108,8 @@ function updateClock() {
 
   updateBinaryTime(date);
   updateDecimalTime(date);
+
+  if (TWELVE_HOUR_TIME) displayMeridiemPip(date.getHours());
 }
 
 /**
@@ -111,7 +118,7 @@ function updateClock() {
  */
 async function prepareClock() {
   UNITS.forEach((unit) => {
-    const unitPips = clock.querySelectorAll(`clock-${unit} pip`);
+    const unitPips = clock.querySelectorAll(`clock-${unit} pip:not(.meridiem)`);
     // Set properties on clock.
     clock[unit] = unitPips;
 
@@ -130,8 +137,6 @@ async function prepareClock() {
         pip.textContent = SHOW_PLACE_VALUES ? val : "";
       });
   });
-
-  if (TWELVE_HOUR_TIME) removeUnusedHoursColumn();
 
   // Update the clock once to set the initial time.
   updateClock();
