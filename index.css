@@ -25,9 +25,7 @@ binary-clock {
 
   padding: 20px;
 
-  clock-hours,
-  clock-minutes,
-  clock-seconds {
+  time.binary-time {
     display: grid;
     gap: 10px;
 
