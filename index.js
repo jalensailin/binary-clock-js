@@ -1,5 +1,6 @@
-const twentyFourHours = true;
-const HOURS_MAX = twentyFourHours ? 24 : 12;
+const SHOW_PLACE_VALUES = true;
+const TWENTY_FOUR_HOURS = true;
+const HOURS_MAX = TWENTY_FOUR_HOURS ? 24 : 12;
 const MINUTES_SECONDS_MAX = 60;
 
 const clock = document.getElementById("clock");
@@ -49,7 +50,9 @@ function prepareClock() {
     Array.from(unitPips)
       .reverse()
       .forEach((pip, index) => {
-        pip.setAttribute("data-binary-place-value", 2 ** index);
+        const val = 2 ** index;
+        pip.setAttribute("data-binary-place-value", val);
+        pip.textContent = SHOW_PLACE_VALUES ? val : "";
       });
   });
 
