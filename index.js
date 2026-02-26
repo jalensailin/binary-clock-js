@@ -24,7 +24,7 @@ const clock = document.getElementById("clock");
  * @returns {string} Binary representation of the given decimal number.
  */
 function toBinary(decimal) {
-  return (decimal >>> 0).toString(2).padStart(8, "0");
+  return decimal.toString(2).padStart(8, "0");
 }
 
 /**
@@ -76,12 +76,18 @@ function updateBinaryTime(date) {
   const binaryTime = getTime(date, { binary: true });
 
   UNITS.forEach((unit) => {
-    const binaryValue = Array.from(binaryTime[unit]).map((value) => Number.parseInt(value, 2));
+    const binaryValue = Array.from(binaryTime[unit]).map((value) =>
+      Number.parseInt(value, 2)
+    );
     const pips = Array.from(clock[unit]);
 
     binaryValue.forEach((value, index) => {
       const pip = pips[index];
-      value ? pip.classList.add("active") : pip.classList.remove("active");
+      if (value) {
+        pip.classList.add("active");
+      } else {
+        pip.classList.remove("active");
+      }
     });
   });
 }
