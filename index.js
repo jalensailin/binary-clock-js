@@ -26,8 +26,11 @@ class BinaryClock {
     /** @type {Record<UNITS[number], NodeList>} */
     this.units = { hours: null, minutes: null, seconds: null };
 
-    // Initialize the clock.
+    // Set initial clock state.
     this.prepareClock();
+
+    // Start the main loop.
+    this.start();
   }
 
   /**
@@ -43,7 +46,6 @@ class BinaryClock {
   /**
    * Returns the time in the given date object.
    * If the binary option is set to true, the time is returned in binary format.
-   * @param {Date} date The date object from which to get the time.
    * @param {Object} [options] Optional options object.
    * @param {boolean} [options.binary=false] If set to true, return the time in binary format.
    * @returns {Object} Object containing the time in hours, minutes, and seconds.
@@ -108,9 +110,7 @@ class BinaryClock {
     });
   }
 
-  /**
-   * Sets the decimal time on the clock.
-   */
+  /** Sets the decimal time on the clock. */
   updateDecimalTime() {
     const decimalTime = this.getTime();
     UNITS.forEach((unit) => {
@@ -138,7 +138,6 @@ class BinaryClock {
 
   /**
    * Prepares the clock by setting the binary place value for each pip.
-   * This is called once at the beginning of the program.
    */
   async prepareClock() {
     UNITS.forEach((unit) => {
@@ -163,7 +162,18 @@ class BinaryClock {
           pip.textContent = SHOW_PLACE_VALUES ? val : "";
         });
     });
+  }
 
+  /**
+   * Starts the clock by:
+   *
+   * 1. Updating the time once
+   * 2. Waiting for the next whole second
+   * 3. Starting the update cycle
+   *
+   * The update cycle is done using setInterval, which calls updateClock every second.
+   */
+  async start() {
     // Update the clock once to set the initial time.
     this.updateClock();
 
