@@ -44,99 +44,6 @@ class BinaryClock {
   }
 
   /**
-   * Returns the time in the given date object.
-   * If the binary option is set to true, the time is returned in binary format.
-   * @param {Object} [options] Optional options object.
-   * @param {boolean} [options.binary=false] If set to true, return the time in binary format.
-   * @returns {Object} Object containing the time in hours, minutes, and seconds.
-   */
-  getTime({ binary = false } = {}) {
-    const hours = this.date.getHours();
-    const time = {
-      hours: TWELVE_HOUR_TIME ? hours % 12 : hours,
-      minutes: this.date.getMinutes(),
-      seconds: this.date.getSeconds(),
-    };
-
-    if (binary) {
-      const { toBinary } = BinaryClock;
-      Object.assign(time, {
-        hours: toBinary(time.hours),
-        minutes: toBinary(time.minutes),
-        seconds: toBinary(time.seconds),
-      });
-    }
-
-    return time;
-  }
-
-  /**
-   * Displays the meridiem pip with the current hour's meridiem.
-   * @param {number} hour The current hour in 12-hour format.
-   */
-  displayMeridiemPip() {
-    // Hide first hour pip to make room for meridiem pip.
-    this.element.querySelector("clock-hours pip").style.display = "none";
-
-    const meridiem = this.element.querySelector("clock-hours pip.meridiem");
-    meridiem.style.display = "";
-    meridiem.classList.add("active");
-
-    const hour = this.date.getHours();
-    meridiem.textContent = hour >= 12 ? "PM" : "AM";
-  }
-
-  /**
-   * Sets the active class on the pips based on the binary
-   * representation of the current time.
-   */
-  updateBinaryTime() {
-    const binaryTime = this.getTime({ binary: true });
-
-    UNITS.forEach((unit) => {
-      const binaryValue = Array.from(binaryTime[unit]).map((value) =>
-        Number.parseInt(value, 2)
-      );
-      const pips = Array.from(this.units[unit]);
-
-      binaryValue.forEach((value, index) => {
-        const pip = pips[index];
-        if (value) {
-          pip.classList.add("active");
-        } else {
-          pip.classList.remove("active");
-        }
-      });
-    });
-  }
-
-  /** Sets the decimal time on the clock. */
-  updateDecimalTime() {
-    const decimalTime = this.getTime();
-    UNITS.forEach((unit) => {
-      const pip = this.element.querySelector(`clock-${unit} time.decimal-time`);
-      let timeValue = decimalTime[unit];
-      // Account for 12-hour time in the hours unit.
-      if (TWELVE_HOUR_TIME && unit === "hours" && timeValue === 0)
-        timeValue = 12;
-      pip.querySelector("span").textContent = timeValue;
-    });
-  }
-
-  /**
-   * Updates the clock by setting the active class on the pips.
-   * This is called once every second.
-   */
-  updateClock() {
-    this.date = new Date();
-
-    this.updateBinaryTime();
-    this.updateDecimalTime();
-
-    if (TWELVE_HOUR_TIME) this.displayMeridiemPip();
-  }
-
-  /**
    * Prepares the clock by setting the binary place value for each pip.
    */
   async prepareClock() {
@@ -189,6 +96,99 @@ class BinaryClock {
       }, timeUntilNextWholeSecond);
     });
     setInterval(() => this.updateClock(), 1000);
+  }
+
+  /**
+   * Updates the clock by setting the active class on the pips.
+   * This is called once every second.
+   */
+  updateClock() {
+    this.date = new Date();
+
+    this.updateBinaryTime();
+    this.updateDecimalTime();
+
+    if (TWELVE_HOUR_TIME) this.displayMeridiemPip();
+  }
+
+  /**
+   * Sets the active class on the pips based on the binary
+   * representation of the current time.
+   */
+  updateBinaryTime() {
+    const binaryTime = this.getTime({ binary: true });
+
+    UNITS.forEach((unit) => {
+      const binaryValue = Array.from(binaryTime[unit]).map((value) =>
+        Number.parseInt(value, 2)
+      );
+      const pips = Array.from(this.units[unit]);
+
+      binaryValue.forEach((value, index) => {
+        const pip = pips[index];
+        if (value) {
+          pip.classList.add("active");
+        } else {
+          pip.classList.remove("active");
+        }
+      });
+    });
+  }
+
+  /** Sets the decimal time on the clock. */
+  updateDecimalTime() {
+    const decimalTime = this.getTime();
+    UNITS.forEach((unit) => {
+      const pip = this.element.querySelector(`clock-${unit} time.decimal-time`);
+      let timeValue = decimalTime[unit];
+      // Account for 12-hour time in the hours unit.
+      if (TWELVE_HOUR_TIME && unit === "hours" && timeValue === 0)
+        timeValue = 12;
+      pip.querySelector("span").textContent = timeValue;
+    });
+  }
+
+  /**
+   * Returns the time in the given date object.
+   * If the binary option is set to true, the time is returned in binary format.
+   * @param {Object} [options] Optional options object.
+   * @param {boolean} [options.binary=false] If set to true, return the time in binary format.
+   * @returns {Object} Object containing the time in hours, minutes, and seconds.
+   */
+  getTime({ binary = false } = {}) {
+    const hours = this.date.getHours();
+    const time = {
+      hours: TWELVE_HOUR_TIME ? hours % 12 : hours,
+      minutes: this.date.getMinutes(),
+      seconds: this.date.getSeconds(),
+    };
+
+    if (binary) {
+      const { toBinary } = BinaryClock;
+      Object.assign(time, {
+        hours: toBinary(time.hours),
+        minutes: toBinary(time.minutes),
+        seconds: toBinary(time.seconds),
+      });
+    }
+
+    return time;
+  }
+
+  /**
+   * Displays the meridiem pip with the current hour's meridiem.
+   * @param {number} hour The current hour in 12-hour format.
+   */
+  displayMeridiemPip() {
+    // Hide first hour pip to make room for meridiem pip.
+    this.element.querySelector("clock-hours pip").style.display = "none";
+
+    const meridiem = this.element.querySelector("clock-hours pip.meridiem");
+    meridiem.style.display = "";
+    meridiem.classList.add("active");
+
+    const hour = this.date.getHours();
+    meridiem.textContent = hour >= 12 ? "PM" : "AM";
   }
 }
 
