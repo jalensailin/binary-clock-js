@@ -96,6 +96,10 @@ binary-clock {
       border: solid 1px $color-decimal-border;
       border-radius: 100vw;
       padding: 8px 12px;
+
+      span {
+        padding-inline-start: 0.5ch;
+      }
     }
   }
 }
