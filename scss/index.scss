@@ -1,3 +1,6 @@
+@use "reset";
+@use "colors" as *;
+
 body {
   display: flex;
 
@@ -7,12 +10,7 @@ body {
   width: 100vw;
   height: 100vh;
 
-  background-color: rgb(31, 31, 44);
-  margin: 0;
-
-  * {
-    box-sizing: border-box;
-  }
+  background-color: $color-page-background;
 }
 
 binary-clock {
@@ -21,10 +19,10 @@ binary-clock {
   align-items: center;
   gap: 40px;
 
-  border: solid 1px rgba(255, 255, 255, 0.3);
+  border: solid 1px $color-clock-border;
   border-radius: 24px;
 
-  box-shadow: 0px 0px 100px rgba(255, 255, 255, 0.5);
+  box-shadow: 0px 0px 100px $color-clock-shadow;
 
   padding: 40px;
 
@@ -52,6 +50,15 @@ binary-clock {
       align-items: center;
 
       pip {
+        @function pip-shadow($active: false) {
+          @if $active {
+            @return inset 2px 2px 10px rgba(0, 0, 0, 0.5),
+              2px 2px 8px rgba(21, 6, 58, 0.5);
+          } @else {
+            @return inset 2px 2px 10px rgba(0, 0, 0, 0.5);
+          }
+        }
+
         display: flex;
         justify-content: center;
         align-items: center;
@@ -59,19 +66,17 @@ binary-clock {
         width: 50px;
         height: 50px;
 
-        color: rgb(31, 31, 44);
+        color: $color-pip-text;
 
-        background-color: rgb(100, 79, 79);
-        box-shadow: inset 2px 2px 10px rgba(0, 0, 0, 0.5);
+        background-color: $color-pip-bg-inactive;
+        box-shadow: pip-shadow();
 
         border-radius: 100vw;
 
         &.active {
-          border: solid 1px rgba(165, 132, 132, 0.5);
-          background-color: rgb(177, 93, 93);
-          box-shadow:
-            inset 2px 2px 10px rgba(0, 0, 0, 0.5),
-            2px 2px 8px rgba(21, 6, 58, 0.5);
+          border: solid 1px $color-pip-border-active;
+          background-color: $color-pip-bg-active;
+          box-shadow: pip-shadow($active: true);
         }
 
         &.hidden {
@@ -85,10 +90,10 @@ binary-clock {
       justify-content: center;
       align-items: center;
 
-      color: rgb(184, 184, 184);
+      color: $color-decimal-text;
       font-size: 0.875em;
 
-      border: solid 1px rgba(255, 255, 255, 0.6);
+      border: solid 1px $color-decimal-border;
       border-radius: 100vw;
       padding: 8px 12px;
     }
