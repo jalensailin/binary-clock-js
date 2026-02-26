@@ -1,3 +1,5 @@
+import { toBinary, snakeToKebab } from "./modules/utils.js";
+
 const UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
 
 class BinaryClock {
@@ -33,26 +35,6 @@ class BinaryClock {
     minutes: 60,
     seconds: 60,
   };
-
-  /**
-   * Converts a given decimal number to its binary representation.
-   * Pad the binary representation with leading zeros to make it 8 characters long.
-   * @param {number} decimal
-   * @returns {string} Binary representation of the given decimal number.
-   */
-  static toBinary(decimal) {
-    return decimal.toString(2).padStart(8, "0");
-  }
-
-  /**
-   * Converts a given string in SCREAMING_SNAKE_CASE to kebab-case.
-   * Replaces all underscores with hyphens and converts the string to lowercase.
-   * @param {string} str The string to convert.
-   * @returns {string} The converted string in kebab-case.
-   */
-  static snakeToKebab(str) {
-    return str.replace(/_/g, "-").toLowerCase();
-  }
 
   /**
    * Prepares the clock by setting the binary place value for each pip.
@@ -95,7 +77,7 @@ class BinaryClock {
     const form = this.element.querySelector("form");
 
     Object.keys(BinaryClock.CONFIG).forEach((key) => {
-      const kebabKey = BinaryClock.snakeToKebab(key);
+      const kebabKey = snakeToKebab(key);
       form.querySelector(`#${kebabKey}`).checked = BinaryClock.CONFIG[key];
     });
   }
@@ -115,7 +97,7 @@ class BinaryClock {
 
       const { name, checked } = event.target;
       const setting = Object.keys(BinaryClock.CONFIG).find((key) => {
-        const kebabKey = BinaryClock.snakeToKebab(key);
+        const kebabKey = snakeToKebab(key);
         return kebabKey === name;
       });
 
@@ -227,7 +209,6 @@ class BinaryClock {
     };
 
     if (binary) {
-      const { toBinary } = BinaryClock;
       Object.assign(time, {
         hours: toBinary(time.hours),
         minutes: toBinary(time.minutes),
