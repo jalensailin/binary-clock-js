@@ -48,6 +48,26 @@
         </time>
         <time class="decimal-time">Seconds:<span></span></time>
       </clock-seconds>
+
+      <button id="toggle-config">
+        <label for="toggle-config">Toggle</label>
+      </button>
+      <form>
+        <div class="form-group">
+          <label for="show-place-values">Show place values</label>
+          <input type="checkbox" id="show-place-values" />
+        </div>
+
+        <div class="form-group">
+          <label for="twelve-hour-time">12-hour time</label>
+          <input type="checkbox" id="twelve-hour-time" />
+        </div>
+
+        <div class="form-group">
+          <label for="hide-unused-pips">Hide unused pips</label>
+          <input type="checkbox" id="hide-unused-pips" />
+        </div>
+      </form>
     </binary-clock>
 
     <script type="module" src="index.js"></script>

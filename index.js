@@ -69,6 +69,18 @@ class BinaryClock {
           pip.textContent = SHOW_PLACE_VALUES ? val : "";
         });
     });
+
+    this.activateListeners();
+  }
+
+  /** Method to register event listeners. */
+  activateListeners() {
+    this.element
+      .querySelector("#toggle-config")
+      .addEventListener("click", (event) => {
+        const form = this.element.querySelector("form");
+        form.classList.toggle("show");
+      });
   }
 
   /**

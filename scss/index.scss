@@ -14,6 +14,9 @@ body {
 }
 
 binary-clock {
+  position: relative;
+  overflow: hidden;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -100,6 +103,26 @@ binary-clock {
       span {
         padding-inline-start: 0.5ch;
       }
+    }
+  }
+
+  button {
+    position: absolute;
+    top: -24px;
+    right: -24px;
+
+    width: 60px;
+    height: 60px;
+
+    border: none;
+    border-radius: 20px;
+  }
+
+  form {
+    display: none;
+
+    &.show {
+      display: block;
     }
   }
 }

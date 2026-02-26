@@ -22,7 +22,14 @@
       }
     ],
     "class-methods-use-this": ["warn"],
-    "no-unused-vars": ["warn"],
+    "no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_$|^event$",
+        "varsIgnorePattern": "^_$",
+        "caughtErrorsIgnorePattern": "^_$"
+      }
+    ],
     "no-nested-ternary": "off",
     "import/extensions": ["warn", "always"]
   },
