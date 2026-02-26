@@ -1,3 +1,3 @@
 # ATTRIBUTIONS
 
-- Favicon: "Font Awesome by Dave Gandy - <http://fontawesome.io>"
+- Favicons and inline Icons: "Font Awesome by Dave Gandy - <http://fontawesome.io>"
