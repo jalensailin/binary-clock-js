@@ -10,6 +10,12 @@
     "dev": "sass --watch scss:dist"
   },
   "devDependencies": {
-    "sass": "^1.97.3"
+    "sass": "^1.97.3",
+    "eslint": "^8.24.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.1"
   }
 }
