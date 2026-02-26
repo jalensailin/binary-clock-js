@@ -15,12 +15,13 @@ body {
 
 binary-clock {
   position: relative;
-  overflow: hidden;
 
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 40px;
+
+  background-color: inherit;
 
   border: solid 1px $color-clock-border;
   border-radius: 24px;
@@ -108,21 +109,46 @@ binary-clock {
 
   button {
     position: absolute;
-    top: -24px;
-    right: -24px;
+    top: 0;
+    right: 0;
 
-    width: 60px;
-    height: 60px;
+    width: 36px;
+    height: 36px;
 
     border: none;
-    border-radius: 20px;
+    border-radius: 0 24px;
   }
 
   form {
-    display: none;
+    $-height: 100px;
+    position: absolute;
+    z-index: -1;
+
+    top: calc(50% - $-height / 2);
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    height: $-height;
+
+    color: $color-decimal-text;
+
+    border: solid 1px $color-clock-border;
+    border-radius: 0 12px 12px 0;
+    padding: 12px;
+
+    transition: transform 0.3s ease-in-out;
 
     &.show {
-      display: block;
+      transform: translateX(200px);
+    }
+
+    .form-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
     }
   }
 }
