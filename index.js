@@ -1,18 +1,3 @@
-/* ------------------------------------------------- */
-/*                   CONFIG OPTIONS                  */
-/* ------------------------------------------------- */
-const SHOW_PLACE_VALUES = true;
-const TWELVE_HOUR_TIME = false;
-const HIDE_UNUSED_PIPS = true;
-
-/* ------------------------------------------------- */
-
-const MAXIMUM_PIPS = /**  @type {const} */ ({
-  hours: TWELVE_HOUR_TIME ? 12 : 24,
-  minutes: 60,
-  seconds: 60,
-});
-
 const UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
 
 class BinaryClock {
@@ -26,12 +11,28 @@ class BinaryClock {
     /** @type {Record<UNITS[number], NodeList>} */
     this.units = { hours: null, minutes: null, seconds: null };
 
+    this.setDefaultSettings();
+
     // Set initial clock state.
     this.prepareClock();
+
+    this.activateListeners();
 
     // Start the main loop.
     this.start();
   }
+
+  static CONFIG = {
+    SHOW_PLACE_VALUES: true,
+    TWELVE_HOUR_TIME: false,
+    HIDE_UNUSED_PIPS: true,
+  };
+
+  static MAXIMUM_PIPS = {
+    hours: this.CONFIG.TWELVE_HOUR_TIME ? 12 : 24,
+    minutes: 60,
+    seconds: 60,
+  };
 
   /**
    * Converts a given decimal number to its binary representation.
@@ -44,9 +45,22 @@ class BinaryClock {
   }
 
   /**
+   * Converts a given string in SCREAMING_SNAKE_CASE to kebab-case.
+   * Replaces all underscores with hyphens and converts the string to lowercase.
+   * @param {string} str The string to convert.
+   * @returns {string} The converted string in kebab-case.
+   */
+  static snakeToKebab(str) {
+    return str.replace(/_/g, "-").toLowerCase();
+  }
+
+  /**
    * Prepares the clock by setting the binary place value for each pip.
    */
   async prepareClock() {
+    this.handleTwelveHourTime();
+
+    const { HIDE_UNUSED_PIPS, SHOW_PLACE_VALUES } = BinaryClock.CONFIG;
     UNITS.forEach((unit) => {
       const unitPips = this.element.querySelectorAll(
         `clock-${unit} pip:not(.meridiem)`
@@ -60,8 +74,10 @@ class BinaryClock {
           const val = 2 ** index;
 
           // Hide unused pips
-          if (HIDE_UNUSED_PIPS && val > MAXIMUM_PIPS[unit]) {
+          if (HIDE_UNUSED_PIPS && val > BinaryClock.MAXIMUM_PIPS[unit]) {
             pip.classList.add("hidden");
+          } else {
+            pip.classList.remove("hidden");
           }
 
           // Set attribute and text content.
@@ -69,8 +85,19 @@ class BinaryClock {
           pip.textContent = SHOW_PLACE_VALUES ? val : "";
         });
     });
+  }
 
-    this.activateListeners();
+  /**
+   * Sets the default settings of the clock by checking the corresponding form fields.
+   * SHOW_PLACE_VALUES, TWELVE_HOUR_TIME, and HIDE_UNUSED_PIPS are set accordingly.
+   */
+  setDefaultSettings() {
+    const form = this.element.querySelector("form");
+
+    Object.keys(BinaryClock.CONFIG).forEach((key) => {
+      const kebabKey = BinaryClock.snakeToKebab(key);
+      form.querySelector(`#${kebabKey}`).checked = BinaryClock.CONFIG[key];
+    });
   }
 
   /** Method to register event listeners. */
@@ -81,6 +108,23 @@ class BinaryClock {
         const form = this.element.querySelector("form");
         form.classList.toggle("show");
       });
+
+    this.element.querySelector("form").addEventListener("change", (event) => {
+      // early return if target is not input:
+      if (event.target.tagName !== "INPUT") return;
+
+      const { name, checked } = event.target;
+      const setting = Object.keys(BinaryClock.CONFIG).find((key) => {
+        const kebabKey = BinaryClock.snakeToKebab(key);
+        return kebabKey === name;
+      });
+
+      // Update config object.
+      BinaryClock.CONFIG[setting] = checked;
+
+      // Re-render clock with new settings.
+      this.prepareClock();
+    });
   }
 
   /**
@@ -119,8 +163,6 @@ class BinaryClock {
 
     this.updateBinaryTime();
     this.updateDecimalTime();
-
-    if (TWELVE_HOUR_TIME) this.displayMeridiemPip();
   }
 
   /**
@@ -145,6 +187,11 @@ class BinaryClock {
         }
       });
     });
+
+    // Handle meridiem pip (even if not shown).
+    const meridiem = this.element.querySelector("clock-hours pip.meridiem");
+    const hour = this.date.getHours();
+    meridiem.textContent = hour >= 12 ? "PM" : "AM";
   }
 
   /** Sets the decimal time on the clock. */
@@ -154,7 +201,11 @@ class BinaryClock {
       const pip = this.element.querySelector(`clock-${unit} time.decimal-time`);
       let timeValue = decimalTime[unit];
       // Account for 12-hour time in the hours unit.
-      if (TWELVE_HOUR_TIME && unit === "hours" && timeValue === 0)
+      if (
+        BinaryClock.CONFIG.TWELVE_HOUR_TIME &&
+        unit === "hours" &&
+        timeValue === 0
+      )
         timeValue = 12;
       pip.querySelector("span").textContent = timeValue;
     });
@@ -170,7 +221,7 @@ class BinaryClock {
   getTime({ binary = false } = {}) {
     const hours = this.date.getHours();
     const time = {
-      hours: TWELVE_HOUR_TIME ? hours % 12 : hours,
+      hours: BinaryClock.CONFIG.TWELVE_HOUR_TIME ? hours % 12 : hours,
       minutes: this.date.getMinutes(),
       seconds: this.date.getSeconds(),
     };
@@ -188,19 +239,25 @@ class BinaryClock {
   }
 
   /**
-   * Displays the meridiem pip with the current hour's meridiem.
+   * Displays/removes the meridiem pip with the current hour's meridiem.
    * @param {number} hour The current hour in 12-hour format.
    */
-  displayMeridiemPip() {
-    // Hide first hour pip to make room for meridiem pip.
-    this.element.querySelector("clock-hours pip").style.display = "none";
-
+  handleTwelveHourTime() {
+    const firstPip = this.element.querySelector("clock-hours pip");
     const meridiem = this.element.querySelector("clock-hours pip.meridiem");
-    meridiem.style.display = "";
-    meridiem.classList.add("active");
 
-    const hour = this.date.getHours();
-    meridiem.textContent = hour >= 12 ? "PM" : "AM";
+    if (BinaryClock.CONFIG.TWELVE_HOUR_TIME) {
+      BinaryClock.MAXIMUM_PIPS.hours = 12;
+      // Hide first hour pip to make room for meridiem pip.
+      firstPip.style.display = "none";
+
+      meridiem.style.display = "";
+      meridiem.classList.add("active");
+    } else {
+      BinaryClock.MAXIMUM_PIPS.hours = 24;
+      firstPip.style.display = "";
+      meridiem.style.display = "none";
+    }
   }
 }
 
