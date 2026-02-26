@@ -12,16 +12,6 @@ export default class BinaryClock {
 
     /** @type {Record<UNITS[number], NodeList>} */
     this.units = { hours: null, minutes: null, seconds: null };
-
-    this.setDefaultSettings();
-
-    // Set initial clock state.
-    this.prepareClock();
-
-    this.activateListeners();
-
-    // Start the main loop.
-    this.start();
   }
 
   static CONFIG = {
@@ -35,6 +25,26 @@ export default class BinaryClock {
     minutes: 60,
     seconds: 60,
   };
+
+  /** Initializes the binary clock. */
+  static initialize() {
+    const clock = new BinaryClock();
+
+    // Expose clock to global scope.
+    Object.assign(globalThis, { clock });
+
+    // Set default settings.
+    clock.setDefaultSettings();
+
+    // Set initial clock state.
+    clock.prepareClock();
+
+    // Register event listeners.
+    clock.activateListeners();
+
+    // Start the main loop.
+    clock.start();
+  }
 
   /**
    * Prepares the clock by setting the binary place value for each pip.
