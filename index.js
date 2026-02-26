@@ -94,8 +94,10 @@ function updateDecimalTime(date) {
   const decimalTime = getTime(date);
   UNITS.forEach((unit) => {
     const pip = clock.querySelector(`clock-${unit} time.decimal-time`);
-    const timeValue = decimalTime[unit];
-    pip.textContent = TWELVE_HOUR_TIME && timeValue === 0 ? 12 : timeValue;
+    let timeValue = decimalTime[unit];
+    // Account for 12-hour time in the hours unit.
+    if (TWELVE_HOUR_TIME && unit === "hours" && timeValue === 0) timeValue = 12;
+    pip.querySelector("span").textContent = timeValue;
   });
 }
 
