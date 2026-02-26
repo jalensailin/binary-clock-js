@@ -37,7 +37,7 @@ export default class BinaryClock {
     clock.setDefaultSettings();
 
     // Set initial clock state.
-    clock.prepareClock();
+    clock.renderClock();
 
     // Register event listeners.
     clock.activateListeners();
@@ -47,9 +47,12 @@ export default class BinaryClock {
   }
 
   /**
-   * Prepares the clock by setting the binary place value for each pip.
+   * Renders the clock by:
+   * 1. Setting the active class on the pips
+   * 2. Setting the binary place value for each pip.
+   * 3. Hide inactive pips (if setting is enabled).
    */
-  async prepareClock() {
+  async renderClock() {
     this.handleTwelveHourTime();
 
     const { HIDE_UNUSED_PIPS, SHOW_PLACE_VALUES } = BinaryClock.CONFIG;
@@ -115,7 +118,7 @@ export default class BinaryClock {
       BinaryClock.CONFIG[setting] = checked;
 
       // Re-render clock with new settings.
-      this.prepareClock();
+      this.renderClock();
     });
   }
 
