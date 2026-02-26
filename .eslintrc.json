@@ -27,6 +27,7 @@
     "import/extensions": ["warn", "always"]
   },
   "globals": {
+    "globalThis": "readonly",
     "document": "readonly"
   },
   "settings": {
