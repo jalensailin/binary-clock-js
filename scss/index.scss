@@ -109,13 +109,18 @@ binary-clock {
     }
   }
 
-  button {
+  button#toggle-config {
     position: absolute;
     top: 0;
     right: 0;
 
     width: 36px;
     height: 36px;
+
+    background-color: rgba(196, 177, 177);
+
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5),
+      2px 2px 8px rgba(21, 6, 58, 0.5);
 
     border: none;
     border-radius: 0 24px;
