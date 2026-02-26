@@ -6,6 +6,7 @@ body {
 
   align-items: center;
   justify-content: center;
+  pointer-events: none; // May not be the best solution here.
 
   width: 100vw;
   height: 100vh;
@@ -15,6 +16,7 @@ body {
 
 binary-clock {
   position: relative;
+  pointer-events: auto; // May not be the best solution here.
 
   display: flex;
   justify-content: center;
