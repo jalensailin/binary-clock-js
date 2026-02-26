@@ -17,8 +17,16 @@ const UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
 
 class BinaryClock {
   constructor() {
-    this.clock = document.getElementById("clock");
-    this.date = new Date();
+    /** @type {HTMLElement} */
+    this.element = document.getElementById("clock");
+
+    /** @type {Date} */
+    this.date = null;
+
+    /** @type {Record<UNITS[number], NodeList>} */
+    this.units = { hours: null, minutes: null, seconds: null };
+
+    // Initialize the clock.
     this.prepareClock();
   }
 
@@ -28,7 +36,7 @@ class BinaryClock {
    * @param {number} decimal
    * @returns {string} Binary representation of the given decimal number.
    */
-  toBinary(decimal) {
+  static toBinary(decimal) {
     return decimal.toString(2).padStart(8, "0");
   }
 
@@ -48,12 +56,14 @@ class BinaryClock {
       seconds: this.date.getSeconds(),
     };
 
-    if (binary)
+    if (binary) {
+      const { toBinary } = BinaryClock;
       Object.assign(time, {
-        hours: this.toBinary(time.hours),
-        minutes: this.toBinary(time.minutes),
-        seconds: this.toBinary(time.seconds),
+        hours: toBinary(time.hours),
+        minutes: toBinary(time.minutes),
+        seconds: toBinary(time.seconds),
       });
+    }
 
     return time;
   }
@@ -63,13 +73,14 @@ class BinaryClock {
    * @param {number} hour The current hour in 12-hour format.
    */
   displayMeridiemPip() {
-    const hour = this.date.getHours();
     // Hide first hour pip to make room for meridiem pip.
-    this.clock.querySelector("clock-hours pip").style.display = "none";
+    this.element.querySelector("clock-hours pip").style.display = "none";
 
-    const meridiem = this.clock.querySelector("clock-hours pip.meridiem");
+    const meridiem = this.element.querySelector("clock-hours pip.meridiem");
     meridiem.style.display = "";
     meridiem.classList.add("active");
+
+    const hour = this.date.getHours();
     meridiem.textContent = hour >= 12 ? "PM" : "AM";
   }
 
@@ -84,7 +95,7 @@ class BinaryClock {
       const binaryValue = Array.from(binaryTime[unit]).map((value) =>
         Number.parseInt(value, 2)
       );
-      const pips = Array.from(this.clock[unit]);
+      const pips = Array.from(this.units[unit]);
 
       binaryValue.forEach((value, index) => {
         const pip = pips[index];
@@ -103,7 +114,7 @@ class BinaryClock {
   updateDecimalTime() {
     const decimalTime = this.getTime();
     UNITS.forEach((unit) => {
-      const pip = this.clock.querySelector(`clock-${unit} time.decimal-time`);
+      const pip = this.element.querySelector(`clock-${unit} time.decimal-time`);
       let timeValue = decimalTime[unit];
       // Account for 12-hour time in the hours unit.
       if (TWELVE_HOUR_TIME && unit === "hours" && timeValue === 0)
@@ -131,11 +142,11 @@ class BinaryClock {
    */
   async prepareClock() {
     UNITS.forEach((unit) => {
-      const unitPips = this.clock.querySelectorAll(
+      const unitPips = this.element.querySelectorAll(
         `clock-${unit} pip:not(.meridiem)`
       );
       // Set properties on clock.
-      this.clock[unit] = unitPips;
+      this.units[unit] = unitPips;
 
       Array.from(unitPips)
         .reverse()
