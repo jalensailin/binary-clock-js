@@ -35,7 +35,8 @@
   },
   "globals": {
     "globalThis": "readonly",
-    "document": "readonly"
+    "document": "readonly",
+    "clock": "readonly"
   },
   "settings": {
     "import/extensions": [".js"]

@@ -15,10 +15,11 @@ export default class Pip {
     /** @type {HTMLElement} */
     this.element = pip;
 
+    const { HIDE_UNUSED_PIPS } = CONFIG.settings;
+
     /** @type {UNIT} */
     this.unit = unit;
-    this.hidden =
-      CONFIG.HIDE_UNUSED_PIPS && placeValue > CONFIG.MAXIMUM_PIPS[unit];
+    this.hidden = HIDE_UNUSED_PIPS && placeValue > CONFIG.MAXIMUM_PIPS[unit];
     this.place = placeValue;
   }
 
@@ -88,7 +89,7 @@ export default class Pip {
   set place(value) {
     const { element } = this;
     element.setAttribute("data-binary-place-value", value);
-    element.textContent = CONFIG.SHOW_PLACE_VALUES ? value : "";
+    element.textContent = CONFIG.settings.SHOW_PLACE_VALUES ? value : "";
   }
 
   /**

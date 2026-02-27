@@ -1,5 +1,5 @@
 import Pip from "./pip.js";
-import { toBinary, snakeToKebab } from "../utils.js";
+import { toBinary } from "../utils.js";
 import CONFIG from "../config.js";
 
 /**
@@ -27,14 +27,8 @@ export default class BinaryClock {
     // Expose clock to global scope.
     Object.assign(globalThis, { clock });
 
-    // Set default settings.
-    clock.setDefaultSettings();
-
     // Set initial clock state.
     clock.renderClock();
-
-    // Register event listeners.
-    clock.activateListeners();
 
     // Start the main loop.
     clock.start();
@@ -57,47 +51,6 @@ export default class BinaryClock {
       this.units[unit] = Array.from(unitPips).map(
         (pipNode, index) => new Pip(unit, index, pipNode)
       );
-    });
-  }
-
-  /**
-   * Sets the default settings of the clock by checking the corresponding form fields.
-   * SHOW_PLACE_VALUES, TWELVE_HOUR_TIME, and HIDE_UNUSED_PIPS are set accordingly.
-   */
-  setDefaultSettings() {
-    const form = document.querySelector("form");
-
-    Object.keys(CONFIG).forEach((key) => {
-      if (key === "MAXIMUM_PIPS") return;
-      const kebabKey = snakeToKebab(key);
-      form.querySelector(`#${kebabKey}`).checked = CONFIG[key];
-    });
-  }
-
-  /** Method to register event listeners. */
-  activateListeners() {
-    document
-      .querySelector("#toggle-config")
-      .addEventListener("click", (event) => {
-        const form = document.querySelector("form");
-        form.classList.toggle("show");
-      });
-
-    document.querySelector("form").addEventListener("change", (event) => {
-      // early return if target is not input:
-      if (event.target.tagName !== "INPUT") return;
-
-      const { name, checked } = event.target;
-      const setting = Object.keys(CONFIG).find((key) => {
-        const kebabKey = snakeToKebab(key);
-        return kebabKey === name;
-      });
-
-      // Update config object.
-      CONFIG[setting] = checked;
-
-      // Re-render clock with new settings.
-      this.renderClock();
     });
   }
 
@@ -175,7 +128,11 @@ export default class BinaryClock {
       let timeValue = decimalTime[unit];
 
       // Account for 12-hour time in the hours unit.
-      if (CONFIG.TWELVE_HOUR_TIME && unit === "hours" && timeValue === 0)
+      if (
+        CONFIG.settings.TWELVE_HOUR_TIME &&
+        unit === "hours" &&
+        timeValue === 0
+      )
         timeValue = 12;
 
       decimalClock.querySelector("span > span").textContent = timeValue;
@@ -192,7 +149,7 @@ export default class BinaryClock {
   getTime({ binary = false } = {}) {
     const hours = this.date.getHours();
     const time = {
-      hours: CONFIG.TWELVE_HOUR_TIME ? hours % 12 : hours,
+      hours: CONFIG.settings.TWELVE_HOUR_TIME ? hours % 12 : hours,
       minutes: this.date.getMinutes(),
       seconds: this.date.getSeconds(),
     };
@@ -216,8 +173,10 @@ export default class BinaryClock {
     const firstPip = this.element.querySelector("clock-hours pip");
     const meridiem = this.element.querySelector("clock-hours pip.meridiem");
 
-    if (CONFIG.TWELVE_HOUR_TIME) {
-      CONFIG.MAXIMUM_PIPS.hours = 12;
+    const { MAXIMUM_PIPS } = CONFIG;
+    const { TWELVE_HOUR_TIME } = CONFIG.settings;
+    if (TWELVE_HOUR_TIME) {
+      MAXIMUM_PIPS.hours = 12;
       // Hide first hour pip to make room for meridiem pip.
       firstPip.style.display = "none";
 
