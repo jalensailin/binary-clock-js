@@ -26,36 +26,23 @@
     ></script>
   </head>
   <body>
-    <binary-clock id="clock">
-      <clock-hours>
-        <time class="binary-time">
+    <div id="clock-container">
+      <time id="binary-clock" datetime="">
+        <clock-hours>
           <pip></pip>
           <pip></pip>
           <pip></pip>
           <pip></pip>
+
           <pip class="meridiem" style="display: none"></pip>
+
           <pip></pip>
           <pip></pip>
           <pip></pip>
           <pip></pip>
-        </time>
-        <time class="decimal-time">Hours:<span></span></time>
-      </clock-hours>
-      <clock-minutes>
-        <time class="binary-time">
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-        </time>
-        <time class="decimal-time">Minutes:<span></span></time>
-      </clock-minutes>
-      <clock-seconds>
-        <time class="binary-time">
+        </clock-hours>
+
+        <clock-minutes>
           <pip></pip>
           <pip></pip>
           <pip></pip>
@@ -64,9 +51,42 @@
           <pip></pip>
           <pip></pip>
           <pip></pip>
-        </time>
-        <time class="decimal-time">Seconds:<span></span></time>
-      </clock-seconds>
+        </clock-minutes>
+
+        <clock-seconds>
+          <pip></pip>
+          <pip></pip>
+          <pip></pip>
+          <pip></pip>
+          <pip></pip>
+          <pip></pip>
+          <pip></pip>
+          <pip></pip>
+        </clock-seconds>
+      </time>
+
+      <time id="decimal-clock" datetime="">
+        <clock-hours>
+          <span>
+            Hours:
+            <span></span>
+          </span>
+        </clock-hours>
+
+        <clock-minutes>
+          <span>
+            Minutes:
+            <span></span>
+          </span>
+        </clock-minutes>
+
+        <clock-seconds>
+          <span>
+            Seconds:
+            <span></span>
+          </span>
+        </clock-seconds>
+      </time>
 
       <button id="toggle-config">
         <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -80,7 +100,6 @@
             name="show-place-values"
           />
         </form-group>
-
         <form-group>
           <label for="twelve-hour-time">12-hour time</label>
           <input
@@ -89,7 +108,6 @@
             name="twelve-hour-time"
           />
         </form-group>
-
         <form-group>
           <label for="hide-unused-pips">Hide unused pips</label>
           <input
@@ -99,7 +117,7 @@
           />
         </form-group>
       </form>
-    </binary-clock>
+    </div>
 
     <script type="module" src="index.js"></script>
   </body>

@@ -11,7 +11,7 @@ const UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
 export default class BinaryClock {
   constructor() {
     /** @type {HTMLElement} */
-    this.element = document.getElementById("clock");
+    this.element = document.getElementById("binary-clock");
 
     /** @type {Date} */
     this.date = null;
@@ -65,7 +65,7 @@ export default class BinaryClock {
    * SHOW_PLACE_VALUES, TWELVE_HOUR_TIME, and HIDE_UNUSED_PIPS are set accordingly.
    */
   setDefaultSettings() {
-    const form = this.element.querySelector("form");
+    const form = document.querySelector("form");
 
     Object.keys(CONFIG).forEach((key) => {
       if (key === "MAXIMUM_PIPS") return;
@@ -76,14 +76,14 @@ export default class BinaryClock {
 
   /** Method to register event listeners. */
   activateListeners() {
-    this.element
+    document
       .querySelector("#toggle-config")
       .addEventListener("click", (event) => {
-        const form = this.element.querySelector("form");
+        const form = document.querySelector("form");
         form.classList.toggle("show");
       });
 
-    this.element.querySelector("form").addEventListener("change", (event) => {
+    document.querySelector("form").addEventListener("change", (event) => {
       // early return if target is not input:
       if (event.target.tagName !== "INPUT") return;
 
@@ -168,8 +168,8 @@ export default class BinaryClock {
   updateDecimalTime() {
     const decimalTime = this.getTime();
     UNITS.forEach((unit) => {
-      const node = this.element.querySelector(
-        `clock-${unit} time.decimal-time`
+      const decimalClock = document.querySelector(
+        `#decimal-clock clock-${unit}`
       );
 
       let timeValue = decimalTime[unit];
@@ -178,7 +178,7 @@ export default class BinaryClock {
       if (CONFIG.TWELVE_HOUR_TIME && unit === "hours" && timeValue === 0)
         timeValue = 12;
 
-      node.querySelector("span").textContent = timeValue;
+      decimalClock.querySelector("span > span").textContent = timeValue;
     });
   }
 

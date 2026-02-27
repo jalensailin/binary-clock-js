@@ -3,5 +3,8 @@ body {
 
   * {
     box-sizing: border-box;
+
+    // May not be the best solution here.
+    pointer-events: auto;
   }
 }
