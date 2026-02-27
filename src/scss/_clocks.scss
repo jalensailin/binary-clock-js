@@ -1,0 +1,121 @@
+@use "colors" as *;
+
+@mixin time-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+#clock-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  background-color: inherit;
+
+  border: solid 1px $color-clock-border;
+  border-radius: 24px;
+  padding: 40px;
+  padding-bottom: 35px;
+
+  &::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+
+    border-radius: inherit;
+    box-shadow: 0px 0px 100px $color-clock-shadow;
+  }
+}
+
+#binary-clock {
+  @include time-container;
+
+  border-radius: inherit;
+
+  clock-hours,
+  clock-minutes,
+  clock-seconds {
+    display: grid;
+
+    grid-template-rows: repeat(4, 1fr);
+    grid-auto-flow: column;
+    gap: 10px;
+
+    justify-content: center;
+    align-items: center;
+
+    flex: 1;
+
+    pip {
+      @function pip-shadow($active: false) {
+        @if $active {
+          @return inset 2px 2px 10px rgba(0, 0, 0, 0.5),
+            2px 2px 8px rgba(21, 6, 58, 0.5);
+        } @else {
+          @return inset 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+      }
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      width: 50px;
+      height: 50px;
+
+      color: $color-pip-text;
+
+      border: 1px solid transparent;
+      background-color: $color-pip-bg-inactive;
+      box-shadow: pip-shadow();
+
+      border-radius: 100vw;
+
+      transition: border 0.4s ease-in-out, box-shadow 0.4s ease-in-out,
+        background-color 0.4s ease-in-out;
+
+      &.active {
+        border: solid 1px $color-pip-border-active;
+        background-color: $color-pip-bg-active;
+        box-shadow: pip-shadow($active: true);
+      }
+
+      &.hidden {
+        visibility: hidden;
+      }
+    }
+  }
+}
+
+#decimal-clock {
+  @include time-container;
+
+  color: $color-decimal-text;
+  font-size: 0.75em;
+
+  clock-hours,
+  clock-minutes,
+  clock-seconds {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+
+    border: solid 1px $color-decimal-border;
+    border-radius: 100vw;
+    padding: 8px 12px;
+
+    > span {
+      text-align: center;
+
+      span {
+        font-weight: bold;
+        padding-inline-start: 0.5ch;
+      }
+    }
+  }
+}
