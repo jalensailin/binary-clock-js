@@ -59,7 +59,8 @@ export default class CONFIG {
       CONFIG.settings[setting] = checked;
 
       // Re-render clock with new settings.
-      clock.renderClock();
+      Clock.binary.renderClock();
+      Clock.decimal.renderClock();
     });
   }
 }

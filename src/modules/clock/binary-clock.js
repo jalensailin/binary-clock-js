@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import Pip from "./pip.js";
 import { toBinary } from "../utils.js";
 import CONFIG from "../config.js";
@@ -8,30 +9,104 @@ import CONFIG from "../config.js";
 
 const UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
 
-export default class BinaryClock {
-  constructor() {
-    /** @type {HTMLElement} */
-    this.element = document.getElementById("binary-clock");
+export class Clock {
+  static date = new Date();
 
-    /** @type {Date} */
-    this.date = null;
+  /** @type {BinaryClock} */
+  static binary;
 
-    /** @type {Record<UNITS[number], Pip[]>} */
-    this.units = { hours: null, minutes: null, seconds: null };
+  /** @type {DecimalClock} */
+  static decimal;
+
+  /** @type {HTMLElement} */
+  element = document.getElementById(`${this.constructor.base}-clock`);
+
+  /** @type {Record<UNITS[number], Pip[]>} */
+  units = { hours: null, minutes: null, seconds: null };
+
+  /**
+   * Returns the current *decimal* time in hours, minutes, and seconds.
+   * If the 12-hour time setting is enabled, the hours are returned in 12-hour format.
+   * @returns {Object} Object containing the current time in hours, minutes, and seconds.
+   * @property {number} hours The current hour in hours.
+   * @property {number} minutes The current minute in minutes.
+   * @property {number} seconds The current second in seconds.
+   */
+  static get time() {
+    const hours = Clock.date.getHours();
+    return {
+      hours: CONFIG.settings.TWELVE_HOUR_TIME ? hours % 12 : hours,
+      minutes: Clock.date.getMinutes(),
+      seconds: Clock.date.getSeconds(),
+    };
   }
 
-  /** Initializes the binary clock. */
-  static initialize() {
-    const clock = new BinaryClock();
+  /**
+   * Updates the clock by setting the active class on the pips.
+   * This is called once every second.
+   */
+  static updateClocks() {
+    this.binary.updateClock();
+    this.decimal.updateClock();
+  }
 
-    // Expose clock to global scope.
-    Object.assign(globalThis, { clock });
+  renderClock() {
+    this.handleTwelveHourTime();
+  }
 
-    // Set initial clock state.
-    clock.renderClock();
+  /**
+   * Starts the clock by:
+   *
+   * 1. Updating the time once
+   * 2. Waiting for the next whole second
+   * 3. Starting the update cycle
+   *
+   * The update cycle is done using setInterval, which calls updateClock every second.
+   */
+  static async startTicker() {
+    // Update the clock once to set the initial time.
+    this.updateClocks();
 
-    // Start the main loop.
-    clock.start();
+    // Wait until the next whole second to start update cycle.
+    // Might not be best solution.
+    const timeNow = new Date().getTime();
+    const timeUntilNextWholeSecond = 1000 - (timeNow % 1000);
+
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        this.updateClocks();
+        resolve();
+      }, timeUntilNextWholeSecond);
+    });
+
+    setInterval(() => {
+      Clock.date = new Date();
+      this.updateClocks();
+    }, 1000);
+  }
+
+  static initialize(...classes) {
+    Object.assign(globalThis, { Clock });
+
+    classes.forEach((ClockClass) => {
+      this[ClockClass.base] = new ClockClass();
+      this[ClockClass.base].renderClock();
+    });
+
+    Clock.startTicker();
+  }
+}
+
+export default class BinaryClock extends Clock {
+  static base = /** @type {const} */ ("binary");
+
+  static get time() {
+    const time = super.time;
+    return Object.assign(time, {
+      hours: toBinary(time.hours),
+      minutes: toBinary(time.minutes),
+      seconds: toBinary(time.seconds),
+    });
   }
 
   /**
@@ -41,7 +116,7 @@ export default class BinaryClock {
    * 3. Hide inactive pips (if setting is enabled).
    */
   async renderClock() {
-    this.handleTwelveHourTime();
+    super.renderClock();
 
     // Initialize binary pips.
     UNITS.forEach((unit) => {
@@ -55,49 +130,11 @@ export default class BinaryClock {
   }
 
   /**
-   * Starts the clock by:
-   *
-   * 1. Updating the time once
-   * 2. Waiting for the next whole second
-   * 3. Starting the update cycle
-   *
-   * The update cycle is done using setInterval, which calls updateClock every second.
-   */
-  async start() {
-    // Update the clock once to set the initial time.
-    this.updateClock();
-
-    // Wait until the next whole second to start update cycle.
-    // Might not be best solution.
-    const timeNow = new Date().getTime();
-    const timeUntilNextWholeSecond = 1000 - (timeNow % 1000);
-
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        this.updateClock();
-        resolve();
-      }, timeUntilNextWholeSecond);
-    });
-    setInterval(() => this.updateClock(), 1000);
-  }
-
-  /**
-   * Updates the clock by setting the active class on the pips.
-   * This is called once every second.
-   */
-  updateClock() {
-    this.date = new Date();
-
-    this.updateBinaryTime();
-    this.updateDecimalTime();
-  }
-
-  /**
    * Sets the active class on the pips based on the binary
    * representation of the current time.
    */
-  updateBinaryTime() {
-    const binaryTime = this.getTime({ binary: true });
+  updateClock() {
+    const binaryTime = BinaryClock.time;
 
     UNITS.forEach((unit) => {
       const binaryValue = Array.from(binaryTime[unit]).map((value) =>
@@ -113,56 +150,8 @@ export default class BinaryClock {
 
     // Handle meridiem pip (even if not shown).
     const meridiem = this.element.querySelector("clock-hours pip.meridiem");
-    const hour = this.date.getHours();
+    const hour = Clock.date.getHours();
     meridiem.textContent = hour >= 12 ? "PM" : "AM";
-  }
-
-  /** Sets the decimal time on the clock. */
-  updateDecimalTime() {
-    const decimalTime = this.getTime();
-    UNITS.forEach((unit) => {
-      const decimalClock = document.querySelector(
-        `#decimal-clock clock-${unit}`
-      );
-
-      let timeValue = decimalTime[unit];
-
-      // Account for 12-hour time in the hours unit.
-      if (
-        CONFIG.settings.TWELVE_HOUR_TIME &&
-        unit === "hours" &&
-        timeValue === 0
-      )
-        timeValue = 12;
-
-      decimalClock.querySelector("span > span").textContent = timeValue;
-    });
-  }
-
-  /**
-   * Returns the time in the given date object.
-   * If the binary option is set to true, the time is returned in binary format.
-   * @param {Object} [options] Optional options object.
-   * @param {boolean} [options.binary=false] If set to true, return the time in binary format.
-   * @returns {Object} Object containing the time in hours, minutes, and seconds.
-   */
-  getTime({ binary = false } = {}) {
-    const hours = this.date.getHours();
-    const time = {
-      hours: CONFIG.settings.TWELVE_HOUR_TIME ? hours % 12 : hours,
-      minutes: this.date.getMinutes(),
-      seconds: this.date.getSeconds(),
-    };
-
-    if (binary) {
-      Object.assign(time, {
-        hours: toBinary(time.hours),
-        minutes: toBinary(time.minutes),
-        seconds: toBinary(time.seconds),
-      });
-    }
-
-    return time;
   }
 
   /**
@@ -187,5 +176,28 @@ export default class BinaryClock {
       firstPip.style.display = "";
       meridiem.style.display = "none";
     }
+  }
+}
+
+export class DecimalClock extends Clock {
+  static base = /** @type {const} */ ("decimal");
+
+  /** Sets the decimal time on the clock. */
+  updateClock() {
+    const decimalTime = Clock.time;
+    UNITS.forEach((unit) => {
+      const decimalClock = this.element.querySelector(`clock-${unit}`);
+
+      const timeValue = decimalTime[unit];
+
+      decimalClock.querySelector("span > span").textContent = timeValue;
+      this.handleTwelveHourTime();
+    });
+  }
+
+  /** @inheritdoc */
+  handleTwelveHourTime() {
+    if (!CONFIG.settings.TWELVE_HOUR_TIME || Clock.time.hours !== 0) return;
+    this.element.querySelector("clock-hours span > span").textContent = 12;
   }
 }
