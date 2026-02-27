@@ -1,6 +1,11 @@
 // eslint-disable-next-line max-classes-per-file
 import Pip from "./pip.js";
 import { toBinary, snakeToKebab } from "../utils.js";
+import CONFIG from "../config.js";
+
+/**
+ * @typedef {"hours" | "minutes" | "seconds"} UNIT
+ */
 
 const UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
 
@@ -12,21 +17,9 @@ export default class BinaryClock {
     /** @type {Date} */
     this.date = null;
 
-    /** @type {Record<UNITS[number], NodeList>} */
+    /** @type {Record<UNITS[number], Pip[]>} */
     this.units = { hours: null, minutes: null, seconds: null };
   }
-
-  static CONFIG = {
-    SHOW_PLACE_VALUES: true,
-    TWELVE_HOUR_TIME: false,
-    HIDE_UNUSED_PIPS: true,
-  };
-
-  static MAXIMUM_PIPS = {
-    hours: this.CONFIG.TWELVE_HOUR_TIME ? 12 : 24,
-    minutes: 60,
-    seconds: 60,
-  };
 
   /** Initializes the binary clock. */
   static initialize() {
@@ -57,21 +50,14 @@ export default class BinaryClock {
   async renderClock() {
     this.handleTwelveHourTime();
 
-    const { HIDE_UNUSED_PIPS, SHOW_PLACE_VALUES } = BinaryClock.CONFIG;
+    // Initialize binary pips.
     UNITS.forEach((unit) => {
       const unitPips = this.element.querySelectorAll(
         `clock-${unit} pip:not(.meridiem)`
       );
-      // Set properties on clock.
-      this.units[unit] = Array.from(unitPips).map((pipNode, index) => {
-        const binaryPlaceValue = 2 ** (7 - index);
-        const hidePip =
-          HIDE_UNUSED_PIPS && binaryPlaceValue > BinaryClock.MAXIMUM_PIPS[unit];
-
-        const pip = new Pip(unit, hidePip, binaryPlaceValue, pipNode);
-        pip.element.textContent = SHOW_PLACE_VALUES ? binaryPlaceValue : "";
-        return pip;
-      });
+      this.units[unit] = Array.from(unitPips).map(
+        (pipNode, index) => new Pip(unit, index, pipNode)
+      );
     });
   }
 
@@ -82,9 +68,10 @@ export default class BinaryClock {
   setDefaultSettings() {
     const form = this.element.querySelector("form");
 
-    Object.keys(BinaryClock.CONFIG).forEach((key) => {
+    Object.keys(CONFIG).forEach((key) => {
+      if (key === "MAXIMUM_PIPS") return;
       const kebabKey = snakeToKebab(key);
-      form.querySelector(`#${kebabKey}`).checked = BinaryClock.CONFIG[key];
+      form.querySelector(`#${kebabKey}`).checked = CONFIG[key];
     });
   }
 
@@ -102,13 +89,13 @@ export default class BinaryClock {
       if (event.target.tagName !== "INPUT") return;
 
       const { name, checked } = event.target;
-      const setting = Object.keys(BinaryClock.CONFIG).find((key) => {
+      const setting = Object.keys(CONFIG).find((key) => {
         const kebabKey = snakeToKebab(key);
         return kebabKey === name;
       });
 
       // Update config object.
-      BinaryClock.CONFIG[setting] = checked;
+      CONFIG[setting] = checked;
 
       // Re-render clock with new settings.
       this.renderClock();
@@ -164,15 +151,11 @@ export default class BinaryClock {
       const binaryValue = Array.from(binaryTime[unit]).map((value) =>
         Number.parseInt(value, 2)
       );
-      const pips = Array.from(this.units[unit]);
+      const pips = this.units[unit];
 
       binaryValue.forEach((value, index) => {
         const pip = pips[index];
-        if (value) {
-          pip.element.classList.add("active");
-        } else {
-          pip.element.classList.remove("active");
-        }
+        pip.active = !!value;
       });
     });
 
@@ -186,16 +169,17 @@ export default class BinaryClock {
   updateDecimalTime() {
     const decimalTime = this.getTime();
     UNITS.forEach((unit) => {
-      const pip = this.element.querySelector(`clock-${unit} time.decimal-time`);
+      const node = this.element.querySelector(
+        `clock-${unit} time.decimal-time`
+      );
+
       let timeValue = decimalTime[unit];
+
       // Account for 12-hour time in the hours unit.
-      if (
-        BinaryClock.CONFIG.TWELVE_HOUR_TIME &&
-        unit === "hours" &&
-        timeValue === 0
-      )
+      if (CONFIG.TWELVE_HOUR_TIME && unit === "hours" && timeValue === 0)
         timeValue = 12;
-      pip.querySelector("span").textContent = timeValue;
+
+      node.querySelector("span").textContent = timeValue;
     });
   }
 
@@ -209,7 +193,7 @@ export default class BinaryClock {
   getTime({ binary = false } = {}) {
     const hours = this.date.getHours();
     const time = {
-      hours: BinaryClock.CONFIG.TWELVE_HOUR_TIME ? hours % 12 : hours,
+      hours: CONFIG.TWELVE_HOUR_TIME ? hours % 12 : hours,
       minutes: this.date.getMinutes(),
       seconds: this.date.getSeconds(),
     };
@@ -233,15 +217,15 @@ export default class BinaryClock {
     const firstPip = this.element.querySelector("clock-hours pip");
     const meridiem = this.element.querySelector("clock-hours pip.meridiem");
 
-    if (BinaryClock.CONFIG.TWELVE_HOUR_TIME) {
-      BinaryClock.MAXIMUM_PIPS.hours = 12;
+    if (CONFIG.TWELVE_HOUR_TIME) {
+      CONFIG.MAXIMUM_PIPS.hours = 12;
       // Hide first hour pip to make room for meridiem pip.
       firstPip.style.display = "none";
 
       meridiem.style.display = "";
       meridiem.classList.add("active");
     } else {
-      BinaryClock.MAXIMUM_PIPS.hours = 24;
+      CONFIG.MAXIMUM_PIPS.hours = 24;
       firstPip.style.display = "";
       meridiem.style.display = "none";
     }
