@@ -15,6 +15,14 @@ button#toggle-config {
 
   border: none;
   border-radius: 0 24px;
+
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+
+    transform: scale(1.1);
+  }
 }
 
 form {
