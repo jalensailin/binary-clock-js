@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 import Pip from "./pip.js";
 import { toBinary, snakeToKebab } from "../utils.js";
 import CONFIG from "../config.js";

@@ -29,9 +29,18 @@ binary-clock {
   border: solid 1px $color-clock-border;
   border-radius: 24px;
 
-  box-shadow: 0px 0px 100px $color-clock-shadow;
-
   padding: 40px;
+
+  &::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+
+    border-radius: inherit;
+    box-shadow: 0px 0px 100px $color-clock-shadow;
+  }
 
   clock-hours,
   clock-minutes,
