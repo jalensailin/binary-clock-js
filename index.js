@@ -1,3 +1,3 @@
-import BinaryClock from "./modules/binary-clock.js";
+import BinaryClock from "./modules/clock/binary-clock.js";
 
 BinaryClock.initialize();

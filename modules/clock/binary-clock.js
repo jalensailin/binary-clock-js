@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
-import Pip from "./clock/pip.js";
-import { toBinary, snakeToKebab } from "./utils.js";
+import Pip from "./pip.js";
+import { toBinary, snakeToKebab } from "../utils.js";
 
 const UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
 
