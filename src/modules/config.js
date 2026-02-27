@@ -5,6 +5,8 @@ export default class CONFIG {
 
   static formButton = document.querySelector("#toggle-config");
 
+  static TIME_UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
+
   static MAXIMUM_PIPS = {
     hours: CONFIG.TWELVE_HOUR_TIME ? 12 : 24,
     minutes: 60,
