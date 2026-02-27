@@ -7,6 +7,10 @@ import Clock from "./base-clock.js";
 export default class BinaryClock extends Clock {
   static base = /** @type {const} */ ("binary");
 
+  /**
+   * Returns the current *binary* time in hours, minutes, and seconds.
+   * @override
+   */
   static get time() {
     const time = super.time;
     return Object.assign(time, {
@@ -17,12 +21,12 @@ export default class BinaryClock extends Clock {
   }
 
   /**
-   * Renders the clock by:
-   * 1. Setting the active class on the pips
-   * 2. Setting the binary place value for each pip.
-   * 3. Hide inactive pips (if setting is enabled).
+   * Renders the binary clock by creating the pips,
+   * which then handles setting state.
+   * @see Pip
+   * @inheritdoc
    */
-  async renderClock() {
+  renderClock() {
     super.renderClock();
 
     // Initialize binary pips.
@@ -63,6 +67,7 @@ export default class BinaryClock extends Clock {
 
   /**
    * Displays/removes the meridiem pip with the current hour's meridiem.
+   * @inheritdoc
    * @param {number} hour The current hour in 12-hour format.
    */
   handleTwelveHourTime() {

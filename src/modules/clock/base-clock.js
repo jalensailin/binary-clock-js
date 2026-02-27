@@ -18,6 +18,7 @@ export default class Clock {
   /**
    * Returns the current *decimal* time in hours, minutes, and seconds.
    * If the 12-hour time setting is enabled, the hours are returned in 12-hour format.
+   * @abstract
    * @returns {Object} Object containing the current time in hours, minutes, and seconds.
    * @property {number} hours The current hour in hours.
    * @property {number} minutes The current minute in minutes.
@@ -33,8 +34,9 @@ export default class Clock {
   }
 
   /**
-   * Updates the clock by setting the active class on the pips.
+   * Updates the internal timestamp and calls the updateClocks method.
    * This is called once every second.
+   * @abstract
    */
   static updateClocks() {
     Clock.date = new Date();
@@ -43,6 +45,10 @@ export default class Clock {
     this.decimal.updateClock();
   }
 
+  /**
+   * Base rendering of clock (does not fill in time).
+   * @abstract
+   */
   renderClock() {
     this.handleTwelveHourTime();
   }
