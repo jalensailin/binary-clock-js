@@ -1,3 +1,5 @@
+// eslint-disable-next-line max-classes-per-file
+import Pip from "./clock/pip.js";
 import { toBinary, snakeToKebab } from "./utils.js";
 
 const UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
@@ -61,24 +63,15 @@ export default class BinaryClock {
         `clock-${unit} pip:not(.meridiem)`
       );
       // Set properties on clock.
-      this.units[unit] = unitPips;
+      this.units[unit] = Array.from(unitPips).map((pipNode, index) => {
+        const binaryPlaceValue = 2 ** (7 - index);
+        const hidePip =
+          HIDE_UNUSED_PIPS && binaryPlaceValue > BinaryClock.MAXIMUM_PIPS[unit];
 
-      Array.from(unitPips)
-        .reverse()
-        .forEach((pip, index) => {
-          const val = 2 ** index;
-
-          // Hide unused pips
-          if (HIDE_UNUSED_PIPS && val > BinaryClock.MAXIMUM_PIPS[unit]) {
-            pip.classList.add("hidden");
-          } else {
-            pip.classList.remove("hidden");
-          }
-
-          // Set attribute and text content.
-          pip.setAttribute("data-binary-place-value", val);
-          pip.textContent = SHOW_PLACE_VALUES ? val : "";
-        });
+        const pip = new Pip(unit, hidePip, binaryPlaceValue, pipNode);
+        pip.element.textContent = SHOW_PLACE_VALUES ? binaryPlaceValue : "";
+        return pip;
+      });
     });
   }
 
@@ -176,9 +169,9 @@ export default class BinaryClock {
       binaryValue.forEach((value, index) => {
         const pip = pips[index];
         if (value) {
-          pip.classList.add("active");
+          pip.element.classList.add("active");
         } else {
-          pip.classList.remove("active");
+          pip.element.classList.remove("active");
         }
       });
     });
