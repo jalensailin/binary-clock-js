@@ -41,8 +41,14 @@ export default class Clock {
   static updateClocks() {
     Clock.date = new Date();
 
-    this.binary.updateClock();
-    this.decimal.updateClock();
+    ["binary", "decimal"].forEach((clock) => {
+      // Strip milliseconds from string:
+      const dateString = Clock.date.toISOString().slice(0, 19);
+      this[clock].element.setAttribute("datetime", dateString);
+
+      // Update each clock.
+      this[clock].updateClock();
+    });
   }
 
   /**
