@@ -21,7 +21,16 @@ export default class CONFIG {
 
   /** Initialize the clock. */
   static initialize() {
+    const { form } = this;
+
+    // Calculate form width, so it slides out correct distance.
+    const formWidth = form.offsetWidth;
+    form.style.setProperty("--translation-distance", `${formWidth}px`);
+
+    // Set default settings.
     this.setDefaultSettings();
+
+    // Activate listeners.
     this.activateListeners();
   }
 

@@ -40,6 +40,8 @@ button#toggle-config {
 }
 
 form {
+  --translation-distance: 195px;
+
   position: absolute;
   z-index: -1;
 
@@ -69,7 +71,7 @@ form {
 
   &.show {
     box-shadow: 0px 0px 100px $color-clock-shadow;
-    transform: translateX(195px);
+    transform: translateX(var(--translation-distance));
     transition: -config-transition(0.1s);
   }
 
@@ -83,7 +85,7 @@ form {
   form-group {
     display: flex;
     justify-content: space-between;
-    gap: 4px;
+    gap: 8px;
 
     .checkbox-wrapper {
       position: relative;
