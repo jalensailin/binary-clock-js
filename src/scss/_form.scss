@@ -95,19 +95,22 @@ form {
 
       @include pip(1.125rem, 0.15s);
 
-      &.active::before {
-        // Font Awesome styling for the checkmark.
-        content: "\f111";
-        font-family: "Font Awesome 7 Free";
-        font-weight: 900;
-        //
+      // Adds an inner pip icon, but I don't love the visual.
+      // Is it necessary for accessibility (e.g. color-blindness)?
+      // If so, then the same would be true of the binary pips.
+      // &.active::before {
+      //   // Font Awesome styling for the checkmark.
+      //   content: "\f111";
+      //   font-family: "Font Awesome 7 Free";
+      //   font-weight: 900;
+      //   //
 
-        position: absolute;
-        top: 0.2rem;
-        left: 0.25rem;
+      //   position: absolute;
+      //   top: 0.2rem;
+      //   left: 0.25rem;
 
-        font-size: 0.5rem;
-      }
+      //   font-size: 0.5rem;
+      // }
 
       input[type="checkbox"] {
         cursor: pointer;
