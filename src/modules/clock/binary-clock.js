@@ -1,4 +1,3 @@
-/* eslint-disable max-classes-per-file */
 import Pip from "./pip.js";
 import { toBinary } from "../utils.js";
 import CONFIG from "../config.js";
