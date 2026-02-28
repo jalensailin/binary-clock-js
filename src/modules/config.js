@@ -35,7 +35,11 @@ export default class CONFIG {
     Object.keys(settings).forEach((key) => {
       if (key === "MAXIMUM_PIPS") return;
       const kebabKey = snakeToKebab(key);
-      this.form.querySelector(`#${kebabKey}`).checked = settings[key];
+
+      const checkbox = this.form.querySelector(`#${kebabKey}`);
+      checkbox.checked = settings[key];
+
+      if (settings[key]) checkbox.parentElement.classList.add("active");
     });
   }
 
@@ -56,6 +60,8 @@ export default class CONFIG {
         const kebabKey = snakeToKebab(key);
         return kebabKey === name;
       });
+
+      event.target.parentElement.classList.toggle("active");
 
       // Update config object.
       CONFIG.settings[setting] = checked;

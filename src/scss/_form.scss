@@ -1,4 +1,5 @@
 @use "colors" as *;
+@use "pip" as *;
 
 button#toggle-config {
   position: absolute;
@@ -58,7 +59,7 @@ form {
 
   &.show {
     box-shadow: 0px 0px 100px $color-clock-shadow;
-    transform: translateX(200px);
+    transform: translateX(195px);
     transition: -config-transition(0.1s);
   }
 
@@ -66,5 +67,37 @@ form {
     display: flex;
     justify-content: space-between;
     gap: 4px;
+
+    .checkbox-wrapper {
+      position: relative;
+      width: 1.125rem;
+      height: 1.125rem;
+
+      border: solid red 1px;
+      border-radius: 100vw;
+
+      @include pip(1.125rem, 0.15s);
+
+      &.active::before {
+        // Font Awesome styling for the checkmark.
+        content: "\f111";
+        font-family: "Font Awesome 7 Free";
+        position: absolute;
+        font-weight: 900;
+        //
+
+        font-size: 0.5rem;
+      }
+
+      input[type="checkbox"] {
+        cursor: pointer;
+        // Hide the checkbox input.
+        opacity: 0;
+        margin: 0;
+
+        height: inherit;
+        width: inherit;
+      }
+    }
   }
 }
