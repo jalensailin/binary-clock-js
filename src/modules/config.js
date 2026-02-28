@@ -17,6 +17,7 @@ export default class CONFIG {
     SHOW_PLACE_VALUES: true,
     TWELVE_HOUR_TIME: false,
     HIDE_UNUSED_PIPS: true,
+    HIDE_DECIMAL_TIME: false,
   };
 
   /** Initialize the clock. */

@@ -4,6 +4,16 @@ import CONFIG from "../config.js";
 export default class DecimalClock extends Clock {
   static base = /** @type {const} */ ("decimal");
 
+  renderClock() {
+    super.renderClock();
+
+    if (CONFIG.settings.HIDE_DECIMAL_TIME) {
+      this.element.style.display = "none";
+    } else {
+      this.element.style.display = "";
+    }
+  }
+
   /** Sets the decimal time on the clock. */
   updateClock() {
     const decimalTime = Clock.time;
