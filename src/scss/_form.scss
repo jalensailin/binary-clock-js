@@ -27,20 +27,28 @@ button#toggle-config {
   }
 }
 
+// Position the form in the center, no matter the height;
+.form-wrapper {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  pointer-events: none;
+}
+
 form {
-  $-height: 100px;
   position: absolute;
   z-index: -1;
 
-  top: calc(50% - $-height / 2);
   right: 0;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
-
-  // height: $-height;
 
   color: $color-decimal-text;
 
