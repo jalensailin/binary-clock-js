@@ -29,6 +29,14 @@ export default class BinaryClock extends Clock {
   renderClock() {
     super.renderClock();
 
+    // Render title:
+    const titleElem = document.querySelector("h1");
+    if (CONFIG.settings.HIDE_TITLE) {
+      titleElem.style.display = "none";
+    } else {
+      titleElem.style.display = "";
+    }
+
     // Initialize binary pips.
     CONFIG.TIME_UNITS.forEach((unit) => {
       const unitPips = this.element.querySelectorAll(

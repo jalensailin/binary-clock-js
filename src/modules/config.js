@@ -18,6 +18,7 @@ export default class CONFIG {
     TWELVE_HOUR_TIME: false,
     HIDE_UNUSED_PIPS: true,
     HIDE_DECIMAL_TIME: false,
+    HIDE_TITLE: false,
   };
 
   /** Initialize the clock. */
