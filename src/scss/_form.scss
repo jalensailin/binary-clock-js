@@ -46,9 +46,11 @@ form {
   --translation-distance: 195px;
 
   position: absolute;
+  overflow-y: auto;
   z-index: -1;
 
   right: 0;
+  max-height: 70%;
 
   display: flex;
   flex-direction: column;
@@ -62,7 +64,7 @@ form {
 
   border: solid 1px $color-clock-border;
   border-radius: 0 12px 12px 0;
-  padding: 12px;
+  padding: 16px;
 
   /* Config transition, different when sliding out vs in. */
   @function -config-transition($box-shadow-duration: 0.3s) {
