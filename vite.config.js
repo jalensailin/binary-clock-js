@@ -1,8 +1,9 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig } from "vite";
 
 export default defineConfig({
   root: "src",
-  base: "/",
+  base: "/binary-clock-js/",
   build: {
     outDir: "../dist",
     emptyOutDir: true,
