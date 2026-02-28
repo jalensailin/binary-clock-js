@@ -30,7 +30,7 @@ export default class BinaryClock extends Clock {
     super.renderClock();
 
     // Render title:
-    const titleElem = document.querySelector("h1");
+    const titleElem = document.getElementById("clock-title");
     if (CONFIG.settings.HIDE_TITLE) {
       titleElem.style.display = "none";
     } else {
