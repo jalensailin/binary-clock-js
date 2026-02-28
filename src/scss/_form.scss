@@ -80,17 +80,48 @@ form {
     transition: -config-transition(0.1s);
   }
 
-  h2 {
-    margin: 0;
-    text-align: center;
-    font-family: $font-receipt;
-    font-size: 1.4rem;
+  #settings-title {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      cursor: pointer;
+      align-self: flex-start;
+      background: none;
+      border: none;
+      color: inherit;
+
+      margin-top: -6px;
+
+      opacity: 0.75;
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+
+      &:disabled {
+        cursor: not-allowed;
+      }
+
+      &:hover:not(:disabled) {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+    }
+
+    h2 {
+      margin: 0;
+      text-align: center;
+      font-family: $font-receipt;
+      font-size: 1.4rem;
+    }
   }
 
   form-group {
     display: flex;
     justify-content: space-between;
     gap: 8px;
+
+    font-size: 0.875rem;
 
     .checkbox-wrapper {
       position: relative;

@@ -102,7 +102,15 @@
       </button>
       <div class="form-wrapper">
         <form autocomplete="off">
-          <h2>Settings</h2>
+          <div id="settings-title">
+            <button id="reset-settings" type="button" disabled>
+              <i class="fa-solid fa-arrow-rotate-left"></i>
+            </button>
+            <h2>Settings</h2>
+            <button id="close-settings" type="button">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
           <form-group>
             <label for="show-place-values">Show place values</label>
             <div class="checkbox-wrapper">

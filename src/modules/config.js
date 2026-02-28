@@ -7,7 +7,11 @@ export default class CONFIG {
 
   static form = document.querySelector("form");
 
-  static formButton = document.querySelector("#toggle-config");
+  static buttons = {
+    toggle: document.querySelector("#toggle-config"),
+    reset: this.form.querySelector("#reset-settings"),
+    close: this.form.querySelector("#close-settings"),
+  };
 
   static TIME_UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
 
@@ -29,16 +33,43 @@ export default class CONFIG {
    * The current settings object.
    * @type {typeof CONFIG.DEFAULT_SETTINGS}
    */
-  static settings;
+  static #settings;
+
+  /**
+   * Updates the current settings object with the given object.
+   * If the given object is not a valid object (i.e. not an object with boolean values for each key in settingsKeys), the method does nothing.
+   * If the object is valid, it updates the current settings object, saves the settings to localStorage, and re-renders the config form and clock with the new settings.
+   * @param {Object} obj The object to update the current settings with.
+   */
+  static set(obj) {
+    // Attempt some validation.
+    if (typeof obj !== "object") return;
+    const entries = Object.entries(obj);
+    const objValid = entries.some(
+      ([k, v]) => this.settingsKeys.includes(k) && typeof v === "boolean"
+    );
+    if (!objValid) return;
+
+    this.#settings = {
+      ...this.#settings,
+      ...obj,
+    };
+
+    this.saveSettings();
+    this.renderSettings();
+    if (globalThis.Clock) this.renderClocks();
+  }
+
+  static get settings() {
+    return this.#settings;
+  }
+
+  static get settingsKeys() {
+    return Object.keys(this.DEFAULT_SETTINGS);
+  }
 
   /** Initialize the clock. */
   static initialize() {
-    const { form } = this;
-
-    // Calculate form width, so it slides out correct distance.
-    const formWidth = form.offsetWidth;
-    form.style.setProperty("--translation-distance", `${formWidth}px`);
-
     // Set default settings.
     this.loadSettings();
 
@@ -52,12 +83,12 @@ export default class CONFIG {
    */
   static loadSettings() {
     const raw = localStorage.getItem(this.SETTING_STORAGE_NAME);
-    if (!raw) this.settings = this.DEFAULT_SETTINGS;
+    if (!raw) this.set(this.DEFAULT_SETTINGS);
 
     try {
-      this.settings = { ...this.DEFAULT_SETTINGS, ...JSON.parse(raw) };
+      this.set({ ...this.DEFAULT_SETTINGS, ...JSON.parse(raw) });
     } catch (error) {
-      this.settings = { ...this.DEFAULT_SETTINGS };
+      this.set({ ...this.DEFAULT_SETTINGS });
     }
 
     this.renderSettings();
@@ -82,43 +113,74 @@ export default class CONFIG {
     const { settings } = CONFIG;
 
     Object.keys(settings).forEach((key) => {
-      if (key === "MAXIMUM_PIPS") return;
       const kebabKey = snakeToKebab(key);
 
       const checkbox = this.form.querySelector(`#${kebabKey}`);
       checkbox.checked = settings[key];
 
-      if (settings[key]) checkbox.parentElement.classList.add("active");
+      const { parentElement } = checkbox;
+      if (settings[key]) parentElement.classList.add("active");
+      else parentElement.classList.remove("active");
+
+      this.checkIfDefaultSettings();
     });
   }
 
   /** Method to register event listeners. */
   static activateListeners() {
     // Show/hide config form.
-    this.formButton.addEventListener("click", (event) => {
+    this.buttons.toggle.addEventListener("click", (event) => {
+      // Calculate form width, so it slides out correct distance.
+      this.setFormWidth();
       this.form.classList.toggle("show");
+    });
+
+    // Close config form.
+    this.buttons.close.addEventListener("click", () => {
+      this.form.classList.remove("show");
+    });
+
+    // Reset settings to default.
+    this.buttons.reset.addEventListener("click", () => {
+      this.set(this.DEFAULT_SETTINGS);
+      this.saveSettings();
+      this.renderClocks();
     });
 
     // Update config object and re-render clock.
     this.form.addEventListener("change", (event) => {
+      const { name, checked, tagName } = event.target;
       // early return if target is not input:
-      if (event.target.tagName !== "INPUT") return;
+      if (tagName !== "INPUT") return;
 
-      const { name, checked } = event.target;
-      const setting = Object.keys(CONFIG.settings).find((key) => {
-        const kebabKey = snakeToKebab(key);
-        return kebabKey === name;
-      });
-
-      event.target.parentElement.classList.toggle("active");
+      const settingName = this.settingsKeys.find(
+        (key) => snakeToKebab(key) === name
+      );
 
       // Update config object.
-      CONFIG.settings[setting] = checked;
-      CONFIG.saveSettings();
-
-      // Re-render clock with new settings.
-      Clock.binary.renderClock();
-      Clock.decimal.renderClock();
+      this.set({ [settingName]: checked });
     });
+  }
+
+  /** Calculate and set form width, so it slides out correct distance. */
+  static setFormWidth() {
+    const formWidth = this.form.offsetWidth;
+    this.form.style.setProperty("--translation-distance", `${formWidth}px`);
+  }
+
+  /**
+   * Check if the current settings are the default settings.
+   * Set the reset button accordingly.
+   */
+  static checkIfDefaultSettings() {
+    if (JSON.stringify(this.settings) === JSON.stringify(this.DEFAULT_SETTINGS))
+      this.buttons.reset.setAttribute("disabled", "");
+    else this.buttons.reset.removeAttribute("disabled");
+  }
+
+  /** Renders all clocks with new settings. */
+  static renderClocks() {
+    Clock.binary.renderClock();
+    Clock.decimal.renderClock();
   }
 }
