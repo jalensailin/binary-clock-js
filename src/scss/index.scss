@@ -16,3 +16,15 @@ body {
 
   background-color: $color-page-background;
 }
+
+footer {
+  position: fixed;
+  bottom: 0;
+
+  font-size: 0.7rem;
+  color: $color-decimal-text;
+
+  a {
+    color: $color-pip-bg-active;
+  }
+}
