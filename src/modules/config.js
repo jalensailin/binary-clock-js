@@ -1,6 +1,10 @@
 import { snakeToKebab } from "./utils.js";
 
 export default class CONFIG {
+  static CONFIG_VERSION = "v1";
+
+  static SETTING_STORAGE_NAME = `binaryClock.settings.${this.CONFIG_VERSION}`;
+
   static form = document.querySelector("form");
 
   static formButton = document.querySelector("#toggle-config");
@@ -13,13 +17,19 @@ export default class CONFIG {
     seconds: 60,
   };
 
-  static settings = {
+  static DEFAULT_SETTINGS = /** @type {const} */ ({
     SHOW_PLACE_VALUES: true,
     TWELVE_HOUR_TIME: false,
     HIDE_UNUSED_PIPS: true,
     HIDE_DECIMAL_TIME: false,
     HIDE_TITLE: false,
-  };
+  });
+
+  /**
+   * The current settings object.
+   * @type {typeof CONFIG.DEFAULT_SETTINGS}
+   */
+  static settings;
 
   /** Initialize the clock. */
   static initialize() {
@@ -30,17 +40,45 @@ export default class CONFIG {
     form.style.setProperty("--translation-distance", `${formWidth}px`);
 
     // Set default settings.
-    this.setDefaultSettings();
+    this.loadSettings();
 
     // Activate listeners.
     this.activateListeners();
   }
 
   /**
+   * Loads the settings from localStorage and updates the settings object.
+   * After loading the settings, it calls renderSettings() to update the UI accordingly.
+   */
+  static loadSettings() {
+    const raw = localStorage.getItem(this.SETTING_STORAGE_NAME);
+    if (!raw) this.settings = this.DEFAULT_SETTINGS;
+
+    try {
+      this.settings = { ...this.DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    } catch (error) {
+      this.settings = { ...this.DEFAULT_SETTINGS };
+    }
+
+    this.renderSettings();
+  }
+
+  /**
+   * Saves the current settings to localStorage.
+   * This function is called when any setting is changed.
+   */
+  static saveSettings() {
+    localStorage.setItem(
+      this.SETTING_STORAGE_NAME,
+      JSON.stringify(this.settings)
+    );
+  }
+
+  /**
    * Sets the default settings of by checking the corresponding
    * form fields. Static properties are then set accordingly.
    */
-  static setDefaultSettings() {
+  static renderSettings() {
     const { settings } = CONFIG;
 
     Object.keys(settings).forEach((key) => {
@@ -76,6 +114,7 @@ export default class CONFIG {
 
       // Update config object.
       CONFIG.settings[setting] = checked;
+      CONFIG.saveSettings();
 
       // Re-render clock with new settings.
       Clock.binary.renderClock();

@@ -36,6 +36,7 @@
   "globals": {
     "globalThis": "readonly",
     "document": "readonly",
+    "localStorage": "readonly",
     "Clock": "readonly"
   },
   "settings": {
