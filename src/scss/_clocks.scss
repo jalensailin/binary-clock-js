@@ -1,4 +1,5 @@
 @use "colors" as *;
+@use "fonts" as *;
 @use "pip" as *;
 
 @mixin time-container {
@@ -18,8 +19,7 @@
 
   border: solid 1px $color-clock-border;
   border-radius: 24px;
-  padding: 40px;
-  padding-bottom: 35px;
+  padding: 35px 40px;
 
   &::before {
     content: "";
@@ -30,6 +30,14 @@
 
     border-radius: inherit;
     box-shadow: 0px 0px 100px $color-clock-shadow;
+  }
+
+  h1 {
+    color: $color-decimal-text;
+    font-family: $font-receipt;
+    text-align: center;
+
+    margin: 0;
   }
 }
 

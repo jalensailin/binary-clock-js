@@ -1,4 +1,5 @@
 @use "colors" as *;
+@use "fonts" as *;
 
 @function pip-shadow($active: false) {
   @if $active {
@@ -19,6 +20,9 @@
   height: $width;
 
   color: $color-pip-text;
+  font-family: $font-receipt;
+  font-weight: bold;
+  padding: 2px 0 0 3px; // Keeping padding here, as it's related to the font above.
 
   border: 1px solid transparent;
   background-color: $color-pip-bg-inactive;

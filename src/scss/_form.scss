@@ -82,9 +82,12 @@ form {
         // Font Awesome styling for the checkmark.
         content: "\f111";
         font-family: "Font Awesome 7 Free";
-        position: absolute;
         font-weight: 900;
         //
+
+        position: absolute;
+        top: 0.2rem;
+        left: 0.25rem;
 
         font-size: 0.5rem;
       }
