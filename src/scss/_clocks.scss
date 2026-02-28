@@ -1,4 +1,5 @@
 @use "colors" as *;
+@use "pip" as *;
 
 @mixin time-container {
   display: flex;
@@ -52,42 +53,7 @@
     flex: 1;
 
     pip {
-      @function pip-shadow($active: false) {
-        @if $active {
-          @return inset 2px 2px 10px rgba(0, 0, 0, 0.5),
-            2px 2px 8px rgba(21, 6, 58, 0.5);
-        } @else {
-          @return inset 2px 2px 10px rgba(0, 0, 0, 0.5);
-        }
-      }
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      width: 50px;
-      height: 50px;
-
-      color: $color-pip-text;
-
-      border: 1px solid transparent;
-      background-color: $color-pip-bg-inactive;
-      box-shadow: pip-shadow();
-
-      border-radius: 100vw;
-
-      transition: border 0.4s ease-in-out, box-shadow 0.4s ease-in-out,
-        background-color 0.4s ease-in-out;
-
-      &.active {
-        border: solid 1px $color-pip-border-active;
-        background-color: $color-pip-bg-active;
-        box-shadow: pip-shadow($active: true);
-      }
-
-      &.hidden {
-        visibility: hidden;
-      }
+      @include pip;
     }
   }
 }

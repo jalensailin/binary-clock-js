@@ -1,0 +1,41 @@
+@use "colors" as *;
+
+@function pip-shadow($active: false) {
+  @if $active {
+    @return inset 2px 2px 10px rgba(0, 0, 0, 0.5),
+      2px 2px 8px rgba(21, 6, 58, 0.5);
+  } @else {
+    @return inset 2px 2px 10px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@mixin pip($width: 50px, $animSpeed: 0.4s) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: visible;
+
+  width: $width;
+  height: $width;
+
+  color: $color-pip-text;
+
+  border: 1px solid transparent;
+  background-color: $color-pip-bg-inactive;
+  box-shadow: pip-shadow();
+
+  border-radius: 100vw;
+
+  transition: border $animSpeed ease-in-out, box-shadow $animSpeed ease-in-out,
+    background-color $animSpeed ease-in-out;
+
+  &.active {
+    border: solid 1px $color-pip-border-active;
+    background-color: $color-pip-bg-active;
+    box-shadow: pip-shadow($active: true);
+  }
+
+  &.hidden {
+    visibility: hidden;
+  }
+}
