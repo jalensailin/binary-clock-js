@@ -11,6 +11,7 @@ export default class CONFIG {
     toggle: document.querySelector("#toggle-config"),
     reset: this.form.querySelector("#reset-settings"),
     close: this.form.querySelector("#close-settings"),
+    zen: this.form.querySelector("#zen-settings"),
   };
 
   static TIME_UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
@@ -27,6 +28,14 @@ export default class CONFIG {
     HIDE_UNUSED_PIPS: true,
     HIDE_DECIMAL_TIME: false,
     HIDE_TITLE: false,
+  });
+
+  static ZEN_SETTINGS = /** @type {const} */ ({
+    SHOW_PLACE_VALUES: false,
+    TWELVE_HOUR_TIME: false,
+    HIDE_UNUSED_PIPS: true,
+    HIDE_DECIMAL_TIME: true,
+    HIDE_TITLE: true,
   });
 
   /**
@@ -123,6 +132,7 @@ export default class CONFIG {
       else parentElement.classList.remove("active");
 
       this.checkIfDefaultSettings();
+      this.checkIfZenSettings();
     });
   }
 
@@ -143,6 +153,10 @@ export default class CONFIG {
     // Reset settings to default.
     this.buttons.reset.addEventListener("click", () => {
       this.set(this.DEFAULT_SETTINGS);
+    });
+
+    this.buttons.zen.addEventListener("click", () => {
+      this.set(this.ZEN_SETTINGS);
     });
 
     // Update config object and re-render clock.
@@ -174,6 +188,16 @@ export default class CONFIG {
     if (JSON.stringify(this.settings) === JSON.stringify(this.DEFAULT_SETTINGS))
       this.buttons.reset.setAttribute("disabled", "");
     else this.buttons.reset.removeAttribute("disabled");
+  }
+
+  /**
+   * Check if the current settings are the zen settings.
+   * Set the zen button accordingly.
+   */
+  static checkIfZenSettings() {
+    if (JSON.stringify(this.settings) === JSON.stringify(this.ZEN_SETTINGS))
+      this.buttons.zen.setAttribute("disabled", "");
+    else this.buttons.zen.removeAttribute("disabled");
   }
 
   /** Renders all clocks with new settings. */
