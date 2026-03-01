@@ -102,15 +102,10 @@
       </button>
       <div class="form-wrapper">
         <form autocomplete="off">
-          <div id="settings-title">
-            <button id="reset-settings" type="button" disabled>
-              <i class="fa-solid fa-arrow-rotate-left"></i>
-            </button>
-            <h2>Settings</h2>
-            <button id="close-settings" type="button">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
+          <h2>Settings</h2>
+          <button id="close-settings" type="button">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
           <form-group>
             <label for="show-place-values">Show place values</label>
             <div class="checkbox-wrapper">
@@ -159,6 +154,16 @@
               <input type="checkbox" id="hide-title" name="hide-title" />
             </div>
           </form-group>
+
+          <div class="form-footer">
+            <button id="reset-settings" type="button">
+              Set To Default <i class="fa-solid fa-arrow-rotate-left"></i>
+            </button>
+
+            <button id="zen-settings" type="button">
+              Zen Mode <i class="fa-solid fa-spa"></i>
+            </button>
+          </div>
         </form>
       </div>
     </div>

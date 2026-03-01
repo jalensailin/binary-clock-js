@@ -2,13 +2,15 @@
 @use "fonts" as *;
 @use "pip" as *;
 
-button#toggle-config {
+@mixin corner-button($width: 36px, $borderRadius: 24px) {
   position: absolute;
   top: 0;
   right: 0;
 
-  width: 36px;
-  height: 36px;
+  width: $width;
+  height: $width;
+
+  color: $color-pip-text;
 
   background-color: $color-config-button;
 
@@ -16,7 +18,7 @@ button#toggle-config {
     2px 2px 8px rgba(21, 6, 58, 0.5);
 
   border: none;
-  border-radius: 0 24px;
+  border-radius: 0 $borderRadius;
 
   opacity: 0.75;
 
@@ -28,6 +30,10 @@ button#toggle-config {
     transform: scale(1.1);
     opacity: 1;
   }
+}
+
+button#toggle-config {
+  @include corner-button;
 }
 
 // Position the form in the center, no matter the height;
@@ -80,40 +86,15 @@ form {
     transition: -config-transition(0.1s);
   }
 
-  #settings-title {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: space-between;
+  button#close-settings {
+    @include corner-button(30px, 12px);
+  }
 
-    button {
-      cursor: pointer;
-      align-self: flex-start;
-      background: none;
-      border: none;
-      color: inherit;
-
-      margin-top: -6px;
-
-      opacity: 0.75;
-      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-
-      &:disabled {
-        cursor: not-allowed;
-      }
-
-      &:hover:not(:disabled) {
-        transform: scale(1.1);
-        opacity: 1;
-      }
-    }
-
-    h2 {
-      margin: 0;
-      text-align: center;
-      font-family: $font-receipt;
-      font-size: 1.4rem;
-    }
+  h2 {
+    margin: 0;
+    text-align: center;
+    font-family: $font-receipt;
+    font-size: 1.4rem;
   }
 
   form-group {
@@ -158,6 +139,38 @@ form {
 
         height: inherit;
         width: inherit;
+      }
+    }
+  }
+
+  .form-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+
+    button {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      color: $color-decimal-text;
+      padding: 4px 8px;
+      background: none;
+      border: 1px solid $color-decimal-text;
+      border-radius: 100vw;
+
+      opacity: 0.75;
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      &:hover:not(:disabled) {
+        transform: scale(1.05);
+        opacity: 1;
       }
     }
   }

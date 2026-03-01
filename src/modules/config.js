@@ -143,8 +143,6 @@ export default class CONFIG {
     // Reset settings to default.
     this.buttons.reset.addEventListener("click", () => {
       this.set(this.DEFAULT_SETTINGS);
-      this.saveSettings();
-      this.renderClocks();
     });
 
     // Update config object and re-render clock.
