@@ -4,3 +4,16 @@
 }
 
 $font-receipt: "BM Receipt", sans-serif;
+
+@font-face {
+  font-family: "Dogica Pixel";
+  src: url("/public/fonts/DogicaPixel.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Dogica Pixel";
+  src: url("/public/fonts/DogicaPixelBold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+$font-dogica-pixel: "Dogica Pixel", sans-serif;

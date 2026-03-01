@@ -112,16 +112,16 @@ form {
     form-group {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       gap: 8px;
 
-      font-size: 0.875rem;
+      font-size: 0.75rem;
 
       .checkbox-wrapper {
         position: relative;
         width: 1.125rem;
         height: 1.125rem;
 
-        border: solid red 1px;
         border-radius: 100vw;
 
         @include pip(1.125rem, 0.15s);
@@ -168,6 +168,9 @@ form {
       gap: 4px;
 
       color: $color-text-light;
+      font-family: inherit;
+      font-size: 0.625rem;
+
       padding: 4px 8px;
       background: none;
       border: 1px solid $color-border-light;

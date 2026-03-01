@@ -13,13 +13,13 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 25px;
 
   background-color: inherit;
 
   border: solid 1px $color-clock-border;
   border-radius: 24px;
-  padding: 35px 40px;
+  padding: 30px 40px;
 
   &::before {
     content: "";
@@ -91,7 +91,7 @@
   @include time-container;
 
   color: $color-text-light;
-  font-size: 0.75em;
+  font-size: 0.625em;
 
   clock-hours,
   clock-minutes,
@@ -102,14 +102,13 @@
 
     border: solid 1px $color-border-light;
     border-radius: 100vw;
-    padding: 8px 12px;
+    padding: 8px;
 
     > span {
       text-align: center;
 
       span {
         font-weight: bold;
-        padding-inline-start: 0.5ch;
       }
     }
   }

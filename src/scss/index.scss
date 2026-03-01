@@ -3,6 +3,7 @@
 @use "form";
 
 @use "colors" as *;
+@use "fonts" as *;
 
 body {
   pointer-events: none; // May not be the best solution here.
@@ -15,13 +16,15 @@ body {
   height: 100vh;
 
   background-color: $color-page-background;
+
+  font-family: $font-dogica-pixel;
 }
 
 footer {
   position: fixed;
   bottom: 0;
 
-  font-size: 0.7rem;
+  font-size: 0.5rem;
   color: $color-text-light;
 
   a {
