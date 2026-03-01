@@ -10,7 +10,7 @@
   width: $width;
   height: $width;
 
-  color: $color-pip-text;
+  color: $color-text-dark;
 
   background-color: $color-config-button;
 
@@ -62,7 +62,7 @@ form {
   justify-content: space-between;
   gap: 10px;
 
-  color: $color-decimal-text;
+  color: $color-text-light;
 
   background-color: $color-page-background;
   box-shadow: 0px 0px 10px $color-clock-shadow;
@@ -104,7 +104,7 @@ form {
 
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: $color-decimal-border transparent;
+    scrollbar-color: $color-border-light transparent;
     scrollbar-gutter: stable both-edges;
 
     padding: 2px 6px;
@@ -167,10 +167,10 @@ form {
       align-items: center;
       gap: 4px;
 
-      color: $color-decimal-text;
+      color: $color-text-light;
       padding: 4px 8px;
       background: none;
-      border: 1px solid $color-decimal-text;
+      border: 1px solid $color-border-light;
       border-radius: 100vw;
 
       opacity: 0.75;
