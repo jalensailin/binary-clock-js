@@ -52,7 +52,6 @@ form {
   --translation-distance: 195px;
 
   position: absolute;
-  overflow-y: auto;
   z-index: -1;
 
   right: 0;
@@ -97,48 +96,62 @@ form {
     font-size: 1.4rem;
   }
 
-  form-group {
+  .inputs {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    gap: 8px;
+    gap: 10px;
 
-    font-size: 0.875rem;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: $color-decimal-border transparent;
+    scrollbar-gutter: stable both-edges;
 
-    .checkbox-wrapper {
-      position: relative;
-      width: 1.125rem;
-      height: 1.125rem;
+    padding: 2px 6px;
 
-      border: solid red 1px;
-      border-radius: 100vw;
+    form-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
 
-      @include pip(1.125rem, 0.15s);
+      font-size: 0.875rem;
 
-      // Adds an inner pip icon, but I don't love the visual.
-      // Is it necessary for accessibility (e.g. color-blindness)?
-      // If so, then the same would be true of the binary pips.
-      // &.active::before {
-      //   // Font Awesome styling for the checkmark.
-      //   content: "\f111";
-      //   font-family: "Font Awesome 7 Free";
-      //   font-weight: 900;
-      //   //
+      .checkbox-wrapper {
+        position: relative;
+        width: 1.125rem;
+        height: 1.125rem;
 
-      //   position: absolute;
-      //   top: 0.2rem;
-      //   left: 0.25rem;
+        border: solid red 1px;
+        border-radius: 100vw;
 
-      //   font-size: 0.5rem;
-      // }
+        @include pip(1.125rem, 0.15s);
 
-      input[type="checkbox"] {
-        cursor: pointer;
-        // Hide the checkbox input.
-        opacity: 0;
-        margin: 0;
+        // Adds an inner pip icon, but I don't love the visual.
+        // Is it necessary for accessibility (e.g. color-blindness)?
+        // If so, then the same would be true of the binary pips.
+        // &.active::before {
+        //   // Font Awesome styling for the checkmark.
+        //   content: "\f111";
+        //   font-family: "Font Awesome 7 Free";
+        //   font-weight: 900;
+        //   //
 
-        height: inherit;
-        width: inherit;
+        //   position: absolute;
+        //   top: 0.2rem;
+        //   left: 0.25rem;
+
+        //   font-size: 0.5rem;
+        // }
+
+        input[type="checkbox"] {
+          cursor: pointer;
+          // Hide the checkbox input.
+          opacity: 0;
+          margin: 0;
+
+          height: inherit;
+          width: inherit;
+        }
       }
     }
   }
