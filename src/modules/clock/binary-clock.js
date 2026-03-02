@@ -81,17 +81,14 @@ export default class BinaryClock extends Clock {
     const firstPip = this.element.querySelector("clock-hours pip");
     const meridiem = this.element.querySelector("clock-hours pip.meridiem");
 
-    const { MAXIMUM_PIPS } = CONFIG;
     const { TWELVE_HOUR_TIME } = CONFIG.settings;
     if (TWELVE_HOUR_TIME) {
-      MAXIMUM_PIPS.hours = 12;
       // Hide first hour pip to make room for meridiem pip.
       firstPip.style.display = "none";
 
       meridiem.style.display = "";
       meridiem.classList.add("active");
     } else {
-      CONFIG.MAXIMUM_PIPS.hours = 24;
       firstPip.style.display = "";
       meridiem.style.display = "none";
     }

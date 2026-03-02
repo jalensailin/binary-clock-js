@@ -16,12 +16,6 @@ export default class CONFIG {
 
   static TIME_UNITS = /**  @type {const} */ (["hours", "minutes", "seconds"]);
 
-  static MAXIMUM_PIPS = {
-    hours: CONFIG.TWELVE_HOUR_TIME ? 12 : 24,
-    minutes: 60,
-    seconds: 60,
-  };
-
   static DEFAULT_SETTINGS = /** @type {const} */ ({
     SHOW_PLACE_VALUES: true,
     TWELVE_HOUR_TIME: false,
@@ -43,6 +37,18 @@ export default class CONFIG {
    * @type {typeof CONFIG.DEFAULT_SETTINGS}
    */
   static #settings;
+
+  /**
+   * Returns an object containing the maximum number of pips that can be displayed
+   * for each time unit (hours, minutes, seconds).
+   */
+  static get MAXIMUM_PIPS() {
+    return /** @type {const} */ ({
+      hours: this.settings.TWELVE_HOUR_TIME ? 12 : 24,
+      minutes: 60,
+      seconds: 60,
+    });
+  }
 
   /**
    * Updates the current settings object with the given object.
