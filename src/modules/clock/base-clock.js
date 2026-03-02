@@ -84,7 +84,22 @@ export default class Clock {
       }, timeUntilNextWholeSecond);
     });
 
-    setInterval(() => this.updateClocks(), 1000);
+    this.scheduleTick();
+  }
+
+  /**
+   * Schedules the next update of the clock using setTimeout, taking
+   * drift into account. Updates the clock every second,
+   * and then schedules the next update.
+   */
+  static scheduleTick() {
+    // Date.now() to synchronize with wall time.
+    const msUntilNextSecond = 1000 - (Date.now() % 1000);
+
+    setTimeout(() => {
+      this.updateClocks();
+      this.scheduleTick();
+    }, msUntilNextSecond);
   }
 
   static initialize(...classes) {
