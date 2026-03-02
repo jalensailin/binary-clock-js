@@ -60,6 +60,15 @@ export default class Clock {
   }
 
   /**
+   * Displays/removes the meridiem pip with the current hour's meridiem.
+   * @abstract
+   * @param {number} hour The current hour in 12-hour format.
+   */
+  static handleTwelveHourTime() {
+    throw new Error("Subclasses must implement handleTwelveHourTime()");
+  }
+
+  /**
    * Starts the clock by:
    *
    * 1. Updating the time once
