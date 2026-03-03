@@ -22,7 +22,7 @@ export default class DecimalClock extends Clock {
 
       const timeValue = decimalTime[unit];
 
-      decimalClock.querySelector("span > span").textContent = timeValue;
+      decimalClock.querySelector("span + span").textContent = timeValue;
       this.handleTwelveHourTime();
     });
   }
@@ -30,6 +30,6 @@ export default class DecimalClock extends Clock {
   /** @inheritdoc */
   handleTwelveHourTime() {
     if (!CONFIG.settings.TWELVE_HOUR_TIME || Clock.time.hours !== 0) return;
-    this.element.querySelector("clock-hours span > span").textContent = 12;
+    this.element.querySelector("clock-hours span + span").textContent = 12;
   }
 }

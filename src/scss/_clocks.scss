@@ -99,17 +99,14 @@
     display: flex;
     justify-content: center;
     flex: 1;
+    gap: 4px;
 
     border: solid 1px $color-border-light;
     border-radius: 100vw;
     padding: 8px;
 
-    > span {
-      text-align: center;
-
-      span {
-        font-weight: bold;
-      }
+    span + span {
+      font-weight: bold;
     }
   }
 }
