@@ -1,5 +1,9 @@
 # Binary Clock - Changelog
 
+## v1.1.1
+
+- Add smooth transition between decimal numbers.
+
 ## v1.1.0
 
 - Better synchronization with system clock.
