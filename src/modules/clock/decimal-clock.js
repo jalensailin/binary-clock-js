@@ -22,7 +22,25 @@ export default class DecimalClock extends Clock {
 
       const timeValue = decimalTime[unit];
 
-      decimalClock.querySelector("span + span").textContent = timeValue;
+      const currentSpan = decimalClock.querySelector(".current");
+      const currentNumber = Number.parseInt(currentSpan.textContent, 10);
+
+      // This sections is what gives the text a smooth animation.
+      if (currentNumber !== timeValue) {
+        // Set new span to current time, then make it current.
+        const newSpan = decimalClock.querySelector(".new");
+        newSpan.textContent = timeValue;
+        newSpan.classList.add("current");
+        newSpan.classList.remove("new");
+
+        // Clear current span, and make it new.
+        currentSpan.textContent = "";
+        currentSpan.classList.remove("current");
+        currentSpan.classList.add("new");
+
+        // Css handles the animation.
+      }
+
       this.handleTwelveHourTime();
     });
   }
@@ -30,6 +48,6 @@ export default class DecimalClock extends Clock {
   /** @inheritdoc */
   handleTwelveHourTime() {
     if (!CONFIG.settings.TWELVE_HOUR_TIME || Clock.time.hours !== 0) return;
-    this.element.querySelector("clock-hours span + span").textContent = 12;
+    this.element.querySelector("clock-hours .current").textContent = 12;
   }
 }

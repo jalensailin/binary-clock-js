@@ -105,8 +105,21 @@
     border-radius: 100vw;
     padding: 8px;
 
-    span + span {
-      font-weight: bold;
+    div {
+      display: grid;
+      grid-template-areas: "numArea";
+
+      > span {
+        grid-area: numArea;
+        font-weight: bold;
+
+        opacity: 0.4;
+
+        &.current {
+          transition: opacity 0.3s ease-in-out;
+          opacity: 1;
+        }
+      }
     }
   }
 }
