@@ -69,34 +69,6 @@ export default class Clock {
   }
 
   /**
-   * Starts the clock by:
-   *
-   * 1. Updating the time once
-   * 2. Waiting for the next whole second
-   * 3. Starting the update cycle
-   *
-   * The update cycle is done using setInterval, which calls updateClocks every second.
-   */
-  static async startTicker() {
-    // Update the clock once to set the initial time.
-    this.updateClocks();
-
-    // Wait until the next whole second to start update cycle.
-    // Might not be best solution.
-    const timeNow = new Date().getTime();
-    const timeUntilNextWholeSecond = 1000 - (timeNow % 1000);
-
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        this.updateClocks();
-        resolve();
-      }, timeUntilNextWholeSecond);
-    });
-
-    this.scheduleTick();
-  }
-
-  /**
    * Schedules the next update of the clock using setTimeout, taking
    * drift into account. Updates the clock every second,
    * and then schedules the next update.
@@ -119,6 +91,8 @@ export default class Clock {
       this[ClockClass.base].renderClock();
     });
 
-    Clock.startTicker();
+    this.updateClocks();
+
+    Clock.scheduleTick();
   }
 }

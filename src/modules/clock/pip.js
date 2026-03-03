@@ -1,8 +1,21 @@
+// eslint-disable-next-line max-classes-per-file
 import CONFIG from "../config.js";
 
 /** @import {UNIT} from "./binary-clock.js" */
 
 export default class Pip {
+  /** @type {boolean} */
+  _active;
+
+  /** @type {boolean} */
+  _hidden;
+
+  /** @type {boolean} */
+  _displayed;
+
+  /** @type {string} */
+  _textContent;
+
   /**
    * Initializes a new Pip instance.
    * @param {UNIT} unit The unit of the pip (e.g. hours, minutes, seconds).
@@ -10,24 +23,16 @@ export default class Pip {
    * @param {HTMLElement} pip The HTML element representing the pip.
    */
   constructor(unit, index, pip) {
-    const placeValue = 2 ** (7 - index);
-
     /** @type {HTMLElement} */
     this.element = pip;
 
-    const { HIDE_UNUSED_PIPS } = CONFIG.settings;
-
     /** @type {UNIT} */
     this.unit = unit;
-    this.hidden = HIDE_UNUSED_PIPS && placeValue > CONFIG.MAXIMUM_PIPS[unit];
-    this.place = placeValue;
+
+    this.index = index;
+
+    this.renderPip();
   }
-
-  /** @type {boolean} */
-  #active;
-
-  /** @type {boolean} */
-  #hidden;
 
   /* --------------------- Active -------------------- */
 
@@ -37,10 +42,10 @@ export default class Pip {
    */
   set active(value) {
     if (value) {
-      this.#active = true;
+      this._active = true;
       this.element.classList.add("active");
     } else {
-      this.#active = false;
+      this._active = false;
       this.element.classList.remove("active");
     }
   }
@@ -50,7 +55,7 @@ export default class Pip {
    * @returns {boolean} true if the pip is active, false otherwise.
    */
   get active() {
-    return this.#active;
+    return this._active;
   }
 
   /* --------------------- Hidden -------------------- */
@@ -62,10 +67,10 @@ export default class Pip {
    */
   set hidden(value) {
     if (value) {
-      this.#hidden = true;
+      this._hidden = true;
       this.element.classList.add("hidden");
     } else {
-      this.#hidden = false;
+      this._hidden = false;
       this.element.classList.remove("hidden");
     }
   }
@@ -75,7 +80,48 @@ export default class Pip {
    * @returns {boolean} true if the pip is hidden, false otherwise.
    */
   get hidden() {
-    return this.#hidden;
+    return this._hidden;
+  }
+
+  /* ------------------- Displayed ------------------- */
+
+  /**
+   * Sets whether the pip should be displayed or not.
+   * If the value is true, the pip will be displayed with the CSS display property set to an empty string.
+   * If the value is false, the pip will be hidden with the CSS display property set to "none".
+   * @param {boolean} value true if the pip should be displayed, false otherwise.
+   */
+  set displayed(value) {
+    this._displayed = value;
+    this.element.style.display = value ? "" : "none";
+  }
+
+  /**
+   * Returns whether the pip is currently displayed or not.
+   * @returns {boolean} true if the pip is displayed, false otherwise.
+   */
+  get displayed() {
+    return this._displayed;
+  }
+
+  /* ------------------ Text Content ----------------- */
+
+  /**
+   * Sets the text content of the pip to the given value.
+   * The text content is the text displayed inside the pip.
+   * @param {string} value The value to set the text content to.
+   */
+  set textContent(value) {
+    this._textContent = value;
+    this.element.textContent = value;
+  }
+
+  /**
+   * Returns the text content of the pip.
+   * @returns {string} The text content of the pip.
+   */
+  get textContent() {
+    return this._textContent;
   }
 
   /* --------------------- Place --------------------- */
@@ -98,5 +144,35 @@ export default class Pip {
    */
   get place() {
     return this.element.getAttribute("data-binary-place-value");
+  }
+
+  /* ------------------------------------------------- */
+
+  /** Renders the pip by assigning various properties. */
+  renderPip() {
+    const { HIDE_UNUSED_PIPS } = CONFIG.settings;
+
+    this.place = 2 ** (7 - this.index);
+    this.hidden =
+      HIDE_UNUSED_PIPS && this.place > CONFIG.MAXIMUM_PIPS[this.unit];
+  }
+}
+
+export class MeridiemPip extends Pip {
+  constructor(pip) {
+    super(null, null, pip);
+    this.active = true;
+  }
+
+  /** Renders the meridiem pip, */
+  renderPip() {
+    // Don't call super.
+    if (CONFIG.settings.TWELVE_HOUR_TIME) {
+      // Hide first hour pip to make room for meridiem pip.
+      this.displayed = true;
+    } else this.displayed = false;
+
+    // Set text content.
+    this.textContent = Clock.date.getHours() >= 12 ? "PM" : "AM";
   }
 }

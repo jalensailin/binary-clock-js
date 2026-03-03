@@ -165,7 +165,7 @@ export default class CONFIG {
       this.set(this.ZEN_SETTINGS);
     });
 
-    // Update config object and re-render clock.
+    // Update config object.
     this.form.addEventListener("change", (event) => {
       const { name, checked, tagName } = event.target;
       // early return if target is not input:
