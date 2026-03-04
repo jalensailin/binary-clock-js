@@ -70,6 +70,7 @@ form {
   border: solid 1px $color-clock-border;
   border-radius: 0 12px 12px 0;
   padding: 16px;
+  opacity: 0;
 
   /* Config transition, different when sliding out vs in. */
   @function -config-transition($box-shadow-duration: 0.3s) {
@@ -77,12 +78,14 @@ form {
       box-shadow $box-shadow-duration ease-in-out;
   }
 
-  transition: -config-transition();
+  transition: opacity 0s ease-in-out 0.3s, -config-transition();
 
   &.show {
     box-shadow: 0px 0px 100px $color-clock-shadow;
     transform: translateX(var(--translation-distance));
     transition: -config-transition(0.1s);
+
+    opacity: 1;
   }
 
   button#close-settings {

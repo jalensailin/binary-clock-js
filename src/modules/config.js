@@ -32,6 +32,13 @@ export default class CONFIG {
     HIDE_TITLE: true,
   });
 
+  static MEDIA_QUERIES = /** @type {const} */ ({
+    1070: window.matchMedia("(max-width: 1070px)"),
+    "1070x590": window.matchMedia(
+      "(max-width: 1070px) and (max-height: 590px)"
+    ),
+  });
+
   /**
    * The current settings object.
    * @type {typeof CONFIG.DEFAULT_SETTINGS}
@@ -144,29 +151,30 @@ export default class CONFIG {
 
   /** Method to register event listeners. */
   static activateListeners() {
+    const { buttons, form } = this;
     // Show/hide config form.
-    this.buttons.toggle.addEventListener("click", (event) => {
+    buttons.toggle.addEventListener("click", (event) => {
       // Calculate form width, so it slides out correct distance.
-      this.setFormWidth();
-      this.form.classList.toggle("show");
+      this.setTranslationDistance();
+      form.classList.toggle("show");
     });
 
     // Close config form.
-    this.buttons.close.addEventListener("click", () => {
-      this.form.classList.remove("show");
+    buttons.close.addEventListener("click", () => {
+      form.classList.remove("show");
     });
 
     // Reset settings to default.
-    this.buttons.reset.addEventListener("click", () => {
+    buttons.reset.addEventListener("click", () => {
       this.set(this.DEFAULT_SETTINGS);
     });
 
-    this.buttons.zen.addEventListener("click", () => {
+    buttons.zen.addEventListener("click", () => {
       this.set(this.ZEN_SETTINGS);
     });
 
     // Update config object.
-    this.form.addEventListener("change", (event) => {
+    form.addEventListener("change", (event) => {
       const { name, checked, tagName } = event.target;
       // early return if target is not input:
       if (tagName !== "INPUT") return;
@@ -178,12 +186,28 @@ export default class CONFIG {
       // Update config object.
       this.set({ [settingName]: checked });
     });
+
+    Object.values(this.MEDIA_QUERIES).forEach((mql) =>
+      mql.addEventListener("change", this.setTranslationDistance.bind(this))
+    );
   }
 
   /** Calculate and set form width, so it slides out correct distance. */
-  static setFormWidth() {
-    const formWidth = this.form.offsetWidth;
-    this.form.style.setProperty("--translation-distance", `${formWidth}px`);
+  static setTranslationDistance() {
+    let translationDist = this.form.offsetWidth;
+
+    if (this.MEDIA_QUERIES["1070"].matches) {
+      translationDist = this.form.offsetHeight;
+    }
+
+    if (this.MEDIA_QUERIES["1070x590"].matches) {
+      translationDist = 0;
+    }
+
+    this.form.style.setProperty(
+      "--translation-distance",
+      `${translationDist}px`
+    );
   }
 
   /**

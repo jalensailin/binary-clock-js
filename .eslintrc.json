@@ -34,10 +34,11 @@
     "import/extensions": ["warn", "always"]
   },
   "globals": {
-    "globalThis": "readonly",
+    "Clock": "readonly",
     "document": "readonly",
+    "globalThis": "readonly",
     "localStorage": "readonly",
-    "Clock": "readonly"
+    "window": "readonly"
   },
   "settings": {
     "import/extensions": [".js"]

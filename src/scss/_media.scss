@@ -1,0 +1,73 @@
+// Viewport near width of binary clock but height is okay.
+@media (max-width: 500px) {
+  body {
+    scale: 0.75;
+  }
+
+  #clock-title {
+    font-size: 1.25rem;
+  }
+
+  #decimal-clock {
+    font-size: 0.75rem;
+  }
+
+  footer {
+    position: absolute !important;
+    width: 100%;
+    text-align: center;
+    left: 0;
+    bottom: -200px !important;
+  }
+}
+
+// Pop out settings form from bottom:
+@media (max-width: 1070px) {
+  form {
+    right: unset;
+    bottom: 0;
+
+    // When popping out of the bottom, we care about max-height more than max-width.
+    max-height: unset;
+    max-width: 70%;
+
+    border-radius: 0 12px 12px 12px;
+
+    &.show {
+      transform: translateY(var(--translation-distance));
+    }
+  }
+}
+
+// Viewport near size of binary clock.
+// Settings form fades in above the clock top.
+@media (((max-width: 1070px) and (max-height: 590px))) {
+  body:has(form.show) {
+    filter: brightness(0.6);
+    transition: filter 0.3s ease-in-out;
+  }
+
+  form {
+    filter: brightness(2) saturate(1.2);
+    right: unset;
+    bottom: unset;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    pointer-events: none;
+    z-index: 2;
+
+    border-radius: 12px;
+
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out,
+      filter 0.3s ease-in-out;
+
+    &.show {
+      transform: translateX(-50%) translateY(-50%);
+
+      pointer-events: auto;
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out,
+        filter 0.3s ease-in-out;
+    }
+  }
+}
