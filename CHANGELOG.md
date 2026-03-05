@@ -1,5 +1,9 @@
 # Binary Clock - Changelog
 
+## v1.2.0
+
+- Add (hopefully) more device-responsive design.
+
 ## v1.1.1
 
 - Add smooth transition between decimal numbers.
