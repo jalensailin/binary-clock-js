@@ -46,6 +46,13 @@ export default class CONFIG {
   static #settings;
 
   /**
+   * The click listener for the outside of the config form.
+   * Made accessible so it can be removed from outside its definition.
+   * @type {Function|null}
+   */
+  static _outsideClickListener = null;
+
+  /**
    * Returns an object containing the maximum number of pips that can be displayed
    * for each time unit (hours, minutes, seconds).
    */
@@ -157,11 +164,33 @@ export default class CONFIG {
       // Calculate form width, so it slides out correct distance.
       this.setTranslationDistance();
       form.classList.toggle("show");
+
+      // Add click listener to outside of form. Could use some refactoring.
+      if (
+        this.MEDIA_QUERIES["1070x590"].matches &&
+        form.classList.contains("show")
+      ) {
+        if (this._outsideClickListener) return;
+        setTimeout(() => {
+          this._outsideClickListener = (e) => {
+            // If the click is outside the form, close it.
+            if (form.contains(e.target)) return;
+            form.classList.remove("show");
+            document.removeEventListener("click", this._outsideClickListener);
+            this._outsideClickListener = null;
+          };
+          document.addEventListener("click", this._outsideClickListener);
+        }, 0);
+      }
     });
 
     // Close config form.
     buttons.close.addEventListener("click", () => {
       form.classList.remove("show");
+
+      // Remove click outside-of-form listener.
+      document.removeEventListener("click", this._outsideClickListener);
+      this._outsideClickListener = null;
     });
 
     // Reset settings to default.
