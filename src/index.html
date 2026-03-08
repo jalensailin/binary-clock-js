@@ -26,91 +26,83 @@
     ></script>
   </head>
   <body>
-    <div id="clock-container">
-      <div id="clock-title">
-        <a
-          href="https://github.com/jalensailin/binary-clock-js"
-          target="_blank"
-        >
-          <i class="fa-brands fa-github"></i>
-        </a>
-        <h1>Binary Clock</h1>
+    <main>
+      <div id="clock-container">
+        <div id="clock-title">
+          <a
+            href="https://github.com/jalensailin/binary-clock-js"
+            target="_blank"
+          >
+            <i class="fa-brands fa-github"></i>
+          </a>
+          <h1>Binary Clock</h1>
+        </div>
+        <time id="binary-clock" datetime="">
+          <clock-hours>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip class="meridiem"></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+          </clock-hours>
+          <clock-minutes>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+          </clock-minutes>
+          <clock-seconds>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+            <pip></pip>
+          </clock-seconds>
+        </time>
+        <time id="decimal-clock" datetime="">
+          <clock-hours>
+            <span>Hours:</span>
+            <div>
+              <span class="current"></span>
+              <span class="new"></span>
+            </div>
+          </clock-hours>
+          <clock-minutes>
+            <span>Minutes:</span>
+            <div>
+              <span class="current"></span>
+              <span class="new"></span>
+            </div>
+          </clock-minutes>
+          <clock-seconds>
+            <span>Seconds:</span>
+            <div>
+              <span class="current"></span>
+              <span class="new"></span>
+            </div>
+          </clock-seconds>
+        </time>
+        <button id="toggle-config">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
       </div>
-      <time id="binary-clock" datetime="">
-        <clock-hours>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-
-          <pip class="meridiem"></pip>
-
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-        </clock-hours>
-
-        <clock-minutes>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-        </clock-minutes>
-
-        <clock-seconds>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-          <pip></pip>
-        </clock-seconds>
-      </time>
-
-      <time id="decimal-clock" datetime="">
-        <clock-hours>
-          <span>Hours:</span>
-          <div>
-            <span class="current"></span>
-            <span class="new"></span>
-          </div>
-        </clock-hours>
-
-        <clock-minutes>
-          <span>Minutes:</span>
-          <div>
-            <span class="current"></span>
-            <span class="new"></span>
-          </div>
-        </clock-minutes>
-
-        <clock-seconds>
-          <span>Seconds:</span>
-          <div>
-            <span class="current"></span>
-            <span class="new"></span>
-          </div>
-        </clock-seconds>
-      </time>
-
-      <button id="toggle-config">
-        <i class="fa-solid fa-ellipsis-vertical"></i>
-      </button>
       <div class="form-wrapper">
         <form autocomplete="off">
           <h2>Settings</h2>
-
           <button id="close-settings" type="button">
             <i class="fa-solid fa-xmark"></i>
           </button>
-
           <div class="inputs">
             <form-group>
               <label for="show-place-values">Show place values</label>
@@ -159,28 +151,26 @@
               </div>
             </form-group>
           </div>
-
           <div class="form-footer">
             <button id="reset-settings" type="button">
               Set To Default <i class="fa-solid fa-arrow-rotate-left"></i>
             </button>
-
             <button id="zen-settings" type="button">
               Zen Mode <i class="fa-solid fa-spa"></i>
             </button>
           </div>
         </form>
       </div>
-      <footer>
-        <p>
-          Created by
-          <a href="https://github.com/jalensailin" target="_blank"
-            >J▲len Michals Levy</a
-          >. Circa 2026.
-        </p>
-      </footer>
-    </div>
+    </main>
 
+    <footer>
+      <p>
+        Created by
+        <a href="https://github.com/jalensailin" target="_blank"
+          >J▲len Michals Levy</a
+        >. Circa 2026.
+      </p>
+    </footer>
     <script type="module" src="index.js"></script>
   </body>
 </html>

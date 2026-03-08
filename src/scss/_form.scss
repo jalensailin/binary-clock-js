@@ -38,8 +38,11 @@ button#toggle-config {
 
 // Position the form in the center, no matter the height;
 .form-wrapper {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  position-anchor: --clock-container;
+  height: anchor-size(height);
+  width: anchor-size(width);
+  z-index: -1;
 
   display: flex;
   justify-content: center;
@@ -49,10 +52,10 @@ button#toggle-config {
 }
 
 form {
+  // Defined programmatically, but default here, just in case.
   --translation-distance: 195px;
 
   position: absolute;
-  z-index: -1;
 
   right: 0;
   max-height: 70%;

@@ -11,14 +11,6 @@
   #decimal-clock {
     font-size: 0.75rem;
   }
-
-  footer {
-    position: absolute !important;
-    width: 100%;
-    text-align: center;
-    left: 0;
-    bottom: -200px !important;
-  }
 }
 
 // Pop out settings form from bottom:
@@ -45,6 +37,10 @@
   body:has(form.show) {
     filter: brightness(0.6);
     transition: filter 0.3s ease-in-out;
+  }
+
+  main {
+    margin-top: 0 !important;
   }
 
   form {

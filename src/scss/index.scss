@@ -9,9 +9,10 @@
 body {
   pointer-events: none; // May not be the best solution here.
   display: flex;
+  flex-direction: column;
 
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
 
   width: 100vw;
   height: 100vh;
@@ -24,11 +25,17 @@ body {
   transition: filter 0.3s ease-in-out;
 }
 
+main {
+  display: flex;
+  align-items: center;
+  flex: 1;
+
+  // Push main down a little, to offset footer.
+  margin-top: calc(1.625rem / 2); // 26px (default height of footer) / 2.
+}
+
 footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  flex: 0 0 min-content;
 
   text-align: center;
 

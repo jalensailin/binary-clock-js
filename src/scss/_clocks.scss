@@ -10,12 +10,13 @@
 }
 
 #clock-container {
+  anchor-name: --clock-container;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 25px;
 
-  background-color: inherit;
+  background-color: $color-page-background;
 
   border: solid 1px $color-clock-border;
   border-radius: 24px;
