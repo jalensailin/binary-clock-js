@@ -1,5 +1,9 @@
 # Binary Clock - Changelog
 
+## v1.2.1
+
+- Place footer within regular html flow.
+
 ## v1.2.0
 
 - Add (hopefully) more device-responsive design.
